@@ -23,7 +23,7 @@ def lambda_handler(event, context):
     httpMethod = event["httpMethod"]
     path = event["path"]
     if httpMethod == getMethod and path == healthPath:
-        response = buildResponse(200)
+        response = buildResponse(200, "Connection is OK")
     elif httpMethod == getMethod and path == questionsPath:
         response = getQuestions()
     elif httpMethod == postMethod and path == questionsPath:
@@ -131,8 +131,7 @@ def buildResponse(statusCode, body=None):
         "headers": {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*"
-        },
-        'body': "Success ping to the server"
+        }
     }
 
     if body is not None:
