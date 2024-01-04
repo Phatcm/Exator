@@ -47,11 +47,6 @@ module "results-db" {
     bucket_name = "exator-results"
 }
 
-# Module for creating an API Gateway
-module "api-gateway" {
-    source = "./modules/api_gateway"
-}
-
 # Module for creating a Lambda function
 module "lambda-handler" {
     source = "./modules/lambda"
@@ -65,4 +60,13 @@ module "lambda-handler" {
     s3_bucket_name = module.results-db.bucket_name
     questions_table_name = module.questions-db.table_name
     attempts_table_name = module.attempts-db.table_name
+}
+
+# Module for creating an API Gateway
+module "api-gateway" {
+    source = "./modules/api_gateway"
+    api_name = "Exator-api-gateway"
+    lambda_invoke_arn = module.lambda-handler.lambda_invoke_arn
+    lambda_function_name = module.lambda-handler.lambda_function_name
+    lambda_function_arn = module.lambda-handler.lambda_function_arn
 }
