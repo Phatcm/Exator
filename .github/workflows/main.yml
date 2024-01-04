@@ -2,6 +2,7 @@ name: iac deployment
 on:
   push:
     branches:
+      - master
       - phat
     paths:
       - "resources/**"
