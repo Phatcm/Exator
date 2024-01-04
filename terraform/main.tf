@@ -54,8 +54,8 @@ module "lambda-handler" {
     lambda_role_arn = module.lambda-role.iam_role_arn
     lambda_handler = "lambda_function.lambda_handler"
     lambda_runtime = "python3.9"
-    output_path = "../resources/lambda_function.zip"
-    source_dir = "../resources/"
+    output_path = "../../resources/lambda_function.zip"
+    source_dir = "../../resources/"
     filename = "lambda_function.zip"
     s3_bucket_name = module.results-db.s3_bucket_name
     questions_table_name = module.questions-db.dynamodb_table_name
