@@ -58,8 +58,8 @@ module "lambda-handler" {
     source_dir = "../resources/"
     filename = "lambda_function.zip"
     s3_bucket_name = module.results-db.bucket_name
-    questions_table_name = module.questions-db.table_name
-    attempts_table_name = module.attempts-db.table_name
+    questions_table_name = module.questions-db.dynamodb_table_name
+    attempts_table_name = module.attempts-db.dynamodb_table_name
 }
 
 # Module for creating an API Gateway
