@@ -1,8 +1,8 @@
 resource "aws_dynamodb_table" "dynamodb_table" {
     name           = var.table_name
     billing_mode   = "PROVISIONED"
-    read_capacity  = 5
-    write_capacity = 5
+    read_capacity  = 6
+    write_capacity = 6
     hash_key       = var.hash_key
     range_key      = var.range_key
 
