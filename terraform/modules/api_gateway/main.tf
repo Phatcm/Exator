@@ -1,13 +1,13 @@
 resource "aws_api_gateway_rest_api" "api_gateway" {
     name        = var.api_name
     description = "This is my API for demonstration purposes"
-    
+
     endpoint_configuration {
-    types = ["REGIONAL"]
+        types = ["REGIONAL"]
     }
 }
 
-#health
+# Health resource
 resource "aws_api_gateway_resource" "health" {
     rest_api_id = aws_api_gateway_rest_api.api_gateway.id
     parent_id   = aws_api_gateway_rest_api.api_gateway.root_resource_id
@@ -30,7 +30,46 @@ resource "aws_api_gateway_integration" "get_health_integration" {
     uri                     = var.lambda_invoke_arn
 }
 
-#questions
+# Topic resource
+resource "aws_api_gateway_resource" "topic" {
+    rest_api_id = aws_api_gateway_rest_api.api_gateway.id
+    parent_id   = aws_api_gateway_rest_api.api_gateway.root_resource_id
+    path_part   = "topic"
+}
+
+resource "aws_api_gateway_method" "get_topic" {
+    rest_api_id   = aws_api_gateway_rest_api.api_gateway.id
+    resource_id   = aws_api_gateway_resource.topic.id
+    http_method   = "GET"
+    authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "get_topic_integration" {
+    rest_api_id             = aws_api_gateway_rest_api.api_gateway.id
+    resource_id             = aws_api_gateway_resource.topic.id
+    http_method             = aws_api_gateway_method.get_topic.http_method
+    integration_http_method = "POST"
+    type                    = "AWS_PROXY"
+    uri                     = var.lambda_invoke_arn
+}
+
+resource "aws_api_gateway_method" "delete_topic" {
+    rest_api_id   = aws_api_gateway_rest_api.api_gateway.id
+    resource_id   = aws_api_gateway_resource.topic.id
+    http_method   = "DELETE"
+    authorization = "NONE"
+}
+
+resource "aws_api_gateway_integration" "delete_topic_integration" {
+    rest_api_id             = aws_api_gateway_rest_api.api_gateway.id
+    resource_id             = aws_api_gateway_resource.topic.id
+    http_method             = aws_api_gateway_method.delete_topic.http_method
+    integration_http_method = "POST"
+    type                    = "AWS_PROXY"
+    uri                     = var.lambda_invoke_arn
+}
+
+# Questions resource
 resource "aws_api_gateway_resource" "questions" {
     rest_api_id = aws_api_gateway_rest_api.api_gateway.id
     parent_id   = aws_api_gateway_rest_api.api_gateway.root_resource_id
@@ -69,7 +108,7 @@ resource "aws_api_gateway_integration" "post_questions_integration" {
     uri                     = var.lambda_invoke_arn
 }
 
-#question
+# Question resource
 resource "aws_api_gateway_resource" "question" {
     rest_api_id = aws_api_gateway_rest_api.api_gateway.id
     parent_id   = aws_api_gateway_rest_api.api_gateway.root_resource_id
@@ -142,36 +181,44 @@ resource "aws_api_gateway_integration" "delete_question_integration" {
 
 resource "aws_api_gateway_deployment" "prod" {
     rest_api_id = aws_api_gateway_rest_api.api_gateway.id
-    
+
     triggers = {
         redeployment = sha1(jsonencode([
             aws_api_gateway_resource.questions.id,
             aws_api_gateway_resource.question.id,
+            aws_api_gateway_resource.topic.id,
             aws_api_gateway_method.get_questions.id,
             aws_api_gateway_method.post_questions.id,
             aws_api_gateway_method.get_question.id,
             aws_api_gateway_method.post_question.id,
             aws_api_gateway_method.patch_question.id,
             aws_api_gateway_method.delete_question.id,
+            aws_api_gateway_method.get_topic.id,
+            aws_api_gateway_method.delete_topic.id,
             aws_api_gateway_integration.get_questions_integration.id,
             aws_api_gateway_integration.post_questions_integration.id,
             aws_api_gateway_integration.get_question_integration.id,
             aws_api_gateway_integration.post_question_integration.id,
             aws_api_gateway_integration.patch_question_integration.id,
-            aws_api_gateway_integration.delete_question_integration.id
+            aws_api_gateway_integration.delete_question_integration.id,
+            aws_api_gateway_integration.get_topic_integration.id,
+            aws_api_gateway_integration.delete_topic_integration.id
         ]))
     }
 
     lifecycle {
         create_before_destroy = true
     }
+
     depends_on = [
         aws_api_gateway_integration.get_questions_integration,
         aws_api_gateway_integration.post_questions_integration,
         aws_api_gateway_integration.get_question_integration,
         aws_api_gateway_integration.post_question_integration,
         aws_api_gateway_integration.patch_question_integration,
-        aws_api_gateway_integration.delete_question_integration
+        aws_api_gateway_integration.delete_question_integration,
+        aws_api_gateway_integration.get_topic_integration,
+        aws_api_gateway_integration.delete_topic_integration
     ]
 }
 
@@ -179,6 +226,7 @@ resource "aws_api_gateway_stage" "api_stage" {
     deployment_id = aws_api_gateway_deployment.prod.id
     rest_api_id   = aws_api_gateway_rest_api.api_gateway.id
     stage_name    = "prod"
+
     depends_on = [
         aws_api_gateway_deployment.prod
     ]
@@ -186,9 +234,9 @@ resource "aws_api_gateway_stage" "api_stage" {
 
 # Permission
 resource "aws_lambda_permission" "apigw" {
-	action        = "lambda:InvokeFunction"
-	function_name = var.lambda_function_name
-	principal     = "apigateway.amazonaws.com"
+    action        = "lambda:InvokeFunction"
+    function_name = var.lambda_function_name
+    principal     = "apigateway.amazonaws.com"
 
-	source_arn = "${aws_api_gateway_rest_api.api_gateway.execution_arn}/*/*/*"
+    source_arn = "${aws_api_gateway_rest_api.api_gateway.execution_arn}/*/*/*"
 }

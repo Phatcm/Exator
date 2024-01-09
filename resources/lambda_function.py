@@ -27,11 +27,11 @@ def lambda_handler(event, context):
         response = buildResponse(200, "Connection is OK")
         
     elif httpMethod == getMethod and path == questionsPath:
-        response = getQuestions()
+        response = getQuestions(event["queryStringParameters"]["username"])
         
     elif httpMethod == postMethod and path == questionsPath:
         #loop to save all questions
-        response = saveQuestion()
+        response = saveQuestions(json.loads(event["body"]))
         
     elif httpMethod == getMethod and path == questionPath:
         response = getQuestion(event["queryStringParameters"]["questionId"])
@@ -56,7 +56,7 @@ def getQuestion(questionId):
     try:
         response = table.get_item(
             Key={
-                "questionId": questionId
+                "username": questionId
             }
         )
         if "Item" in response:
@@ -66,41 +66,88 @@ def getQuestion(questionId):
     except:
         logger.exception("Do your custom error handling here. I am just gonna log it our here!!")
 
-def getQuestions():
+def getQuestions(username):
     try:
-        response = table.scan()
+        response = table.query(
+            KeyConditionExpression=boto3.dynamodb.conditions.Key('username').eq(username)
+        )
         result = response["Items"]
 
-        while "LastEvaluateKey" in response:
-            response = table.scan(ExclusiveStartKey=response["LastEvaluatedKey"])
-            result.extend(response["Items"])
+        # while "LastEvaluateKey" in response:
+        #     response = table.scan(ExclusiveStartKey=response["LastEvaluatedKey"])
+        #     result.extend(response["Items"])
 
-        body = {
-            "questions": response
-        }
-        return buildResponse(200, body)
+        return buildResponse(200, result)
+    except:
+        logger.exception("Do your custom error handling here. I am just gonna log it our here!!")
+
+def saveQuestions(requestBody):
+    try:
+        name = requestBody["name"]
+        topic = requestBody["topic"]
+        questions = requestBody["questions"].split("\n") #Split the question by line
+        
+        for question in questions:
+            questionBody = {
+                "name": name,
+                "topic": topic,
+                "questions": question
+            }
+            print(questionBody)
+            saveQuestion(questionBody)
+        
+        return buildResponse(200, {"Message": "Questions added successfully"})
     except:
         logger.exception("Do your custom error handling here. I am just gonna log it our here!!")
 
 def saveQuestion(requestBody):
     try:
         name = requestBody["name"]
-        response = parse_question(requestBody["question"])
+        topic = requestBody["topic"]
         
-        table.put_item(Item={
-            "question_id": name,
-            "question_type": "1",
-            "question": response
-        })
-        body = {
-            "Operation": "SAVE",
-            "Message": "SUCCESS",
-            "question_id": name,
-            "question": response
-        }
-        return buildResponse(200, body)
+        response = table.get_item(
+            Key={
+                "username": name,
+                "topic": topic
+            }
+        )
+        if "Item" in response:
+            old_questions = response["Item"]["questions"]
+        else:
+            old_questions = []
+  
+        # Parse the new question
+        new_question = parse_question(requestBody["questions"])
+        
+        # Add the new question to the list of old questions
+        old_questions.append(new_question)
+        
+        #Update the item to dynamodb
+        table.put_item(
+            Item={
+                "username": name,
+                "topic": topic,
+                "questions": old_questions
+            }
+        )
+        return buildResponse(200, {"Message": "Question added successfully"})
     except:
         logger.exception("Do your custom error handling here. I am just gonna log it our here!!")
+
+        
+        # table.put_item(Item={
+        #     "username": name,
+        #     "topic": topic,
+        #     "question": new_question
+        # })
+        # body = {
+        #     "Operation": "SAVE",
+        #     "Message": "SUCCESS",
+        #     "question_id": name,
+        #     "question": new_question
+        # }
+        # return buildResponse(200, body)
+    
 
 def modifyQuestion(questionId, updateKey, updateValue):
     try:
@@ -157,15 +204,15 @@ def buildResponse(statusCode, body=None):
     
 def parse_question(question):
     question_parts = question.split("-")
-    question_text = question_parts[0] #Separate the question from the answer
-    answers = question_parts[1:]
+    question_text = question_parts[0]  # Separate the question from the answers
+    answers = [answer.strip() for answer in question_parts[1:]]  # Remove leading/trailing whitespace
     
-    # # Find the correct answer
+    # Uncomment the following lines if you want to find the correct answer
     # correct_answer = None
     # for i, answer in enumerate(answers):
     #     if answer.startswith("*"):
-    #         correct_answer = answer[1:] # Remove the asterisk *
+    #         correct_answer = answer[1:]  # Remove the asterisk *
     #         answers[i] = correct_answer
     #         break
     
-    return question_text, answers
+    return (question_text, answers)
