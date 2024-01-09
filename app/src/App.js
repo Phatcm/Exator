@@ -7,8 +7,9 @@ import NavigationMenu from "./component/navigation-menu/NavigationMenu";
 import Header from "./component/header/Header";
 import MyLibrary from "./pages/my-library/MyLibrary";
 import User from "./pages/user/User";
-import Theme from "./pages/theme/Theme";
 import NotFound from "./pages/notfound/NotFound";
+import Theme from "./pages/dashboard/theme/Theme";
+import MyTheme from "./pages/my-library/my-theme/MyTheme";
 
 function App() {
   return (
@@ -28,7 +29,7 @@ function App() {
             <Route path="/mylibrary" element={<MyLibrary />} />
             <Route path="/dashboard/:user" element={<User />} />
             <Route path="/dashboard/:user/:theme" element={<Theme />} />
-            <Route path="/dashboard/:user/:theme" element={<Theme />} />
+            <Route path="/mylibrary/:theme" element={<MyTheme />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
