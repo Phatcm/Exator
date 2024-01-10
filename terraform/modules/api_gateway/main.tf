@@ -1,12 +1,9 @@
 resource "aws_api_gateway_rest_api" "api_gateway" {
     name        = var.api_name
     description = "This is my API for demonstration purposes"
-
-    endpoint_configuration {
-        types = ["REGIONAL"]
-    }
 }
 
+  
 # Health resource
 resource "aws_api_gateway_resource" "health" {
     rest_api_id = aws_api_gateway_rest_api.api_gateway.id
@@ -179,6 +176,7 @@ resource "aws_api_gateway_integration" "delete_question_integration" {
     uri                     = var.lambda_invoke_arn
 }
 
+#Deployment
 resource "aws_api_gateway_deployment" "prod" {
     rest_api_id = aws_api_gateway_rest_api.api_gateway.id
 
@@ -202,7 +200,7 @@ resource "aws_api_gateway_deployment" "prod" {
             aws_api_gateway_integration.patch_question_integration.id,
             aws_api_gateway_integration.delete_question_integration.id,
             aws_api_gateway_integration.get_topic_integration.id,
-            aws_api_gateway_integration.delete_topic_integration.id
+            aws_api_gateway_integration.delete_topic_integration.id,
         ]))
     }
 
@@ -218,7 +216,8 @@ resource "aws_api_gateway_deployment" "prod" {
         aws_api_gateway_integration.patch_question_integration,
         aws_api_gateway_integration.delete_question_integration,
         aws_api_gateway_integration.get_topic_integration,
-        aws_api_gateway_integration.delete_topic_integration
+        aws_api_gateway_integration.delete_topic_integration,
+
     ]
 }
 
@@ -240,3 +239,4 @@ resource "aws_lambda_permission" "apigw" {
 
     source_arn = "${aws_api_gateway_rest_api.api_gateway.execution_arn}/*/*/*"
 }
+

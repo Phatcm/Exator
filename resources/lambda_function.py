@@ -16,6 +16,7 @@ deleteMethod = "DELETE"
 healthPath = "/health"
 questionPath = "/question"
 questionsPath = "/questions"
+topicPath = "/topic"
 
 
 def lambda_handler(event, context):
@@ -46,10 +47,19 @@ def lambda_handler(event, context):
     elif httpMethod == deleteMethod and path == questionPath:
         requestBody = json.loads(event["body"])
         response = deleteQuestion(requestBody["questionId"])
+    
+    elif httpMethod == getMethod and path == topicPath:
+        response = deleteTopic(event["queryStringParameters"]["topic"])
         
+    elif httpMethod == deleteMethod and path == topicPath:
+        response = deleteTopic(event["queryStringParameters"])
+    
+    elif httpMethod == "OPTIONS":
+        response = buildResponse(200)
     else:
         response = buildResponse(404, "Not Found")
-        
+    
+    
     return response
 
 def getQuestion(questionId):
@@ -134,20 +144,6 @@ def saveQuestion(requestBody):
     except:
         logger.exception("Do your custom error handling here. I am just gonna log it our here!!")
 
-        
-        # table.put_item(Item={
-        #     "username": name,
-        #     "topic": topic,
-        #     "question": new_question
-        # })
-        # body = {
-        #     "Operation": "SAVE",
-        #     "Message": "SUCCESS",
-        #     "question_id": name,
-        #     "question": new_question
-        # }
-        # return buildResponse(200, body)
-    
 
 def modifyQuestion(questionId, updateKey, updateValue):
     try:
@@ -188,13 +184,36 @@ def deleteQuestion(questionId):
     except:
         logger.exception("Do your custom error handling here. I am just gonna log it our here!!")
 
+def deleteTopic(parameter):
+    try:
+        name = parameter["username"]
+        topic = parameter["topic"]
+        
+        response = table.delete_item(
+            Key={
+                "username": name,
+                "topic": topic
+            }
+        )
+        
+        body = {
+            "Operation": "DELETE",
+            "Message": "SUCCESS",
+            "deltedItem": response
+        }
+        return buildResponse(200, body)
+        
+    except:
+        logger.exception("Do your custom error handling here. I am just gonna log it our here!!")
 
 def buildResponse(statusCode, body=None):
     response = {
         "statusCode": statusCode,
         "headers": {
             "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*"
+            "Access-Control-Allow-Origin": "*",  # Allows any domain to make requests
+            "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",  # Allows these HTTP methods
+            "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",  # Allows these headers
         }
     }
 
@@ -206,13 +225,4 @@ def parse_question(question):
     question_parts = question.split("-")
     question_text = question_parts[0]  # Separate the question from the answers
     answers = [answer.strip() for answer in question_parts[1:]]  # Remove leading/trailing whitespace
-    
-    # Uncomment the following lines if you want to find the correct answer
-    # correct_answer = None
-    # for i, answer in enumerate(answers):
-    #     if answer.startswith("*"):
-    #         correct_answer = answer[1:]  # Remove the asterisk *
-    #         answers[i] = correct_answer
-    #         break
-    
     return (question_text, answers)
