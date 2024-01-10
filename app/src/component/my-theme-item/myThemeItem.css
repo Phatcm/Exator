@@ -1,0 +1,7 @@
+.limited-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Số lượng dòng tối đa bạn muốn hiển thị */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
