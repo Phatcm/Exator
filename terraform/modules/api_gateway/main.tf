@@ -12,23 +12,6 @@ resource "aws_api_gateway_deployment" "prod" {
 
     triggers = {
         redeployment = sha1(jsonencode([
-            aws_api_gateway_resource.questions.id,
-            aws_api_gateway_resource.question.id,
-            aws_api_gateway_resource.topic.id,
-            aws_api_gateway_resource.topics.id,
-            aws_api_gateway_method.get_questions.id,
-            aws_api_gateway_method.post_questions.id,
-            aws_api_gateway_method.options_questions.id,
-            aws_api_gateway_method.get_question.id,
-            aws_api_gateway_method.post_question.id,
-            aws_api_gateway_method.patch_question.id,
-            aws_api_gateway_method.delete_question.id,
-            aws_api_gateway_method.get_topic.id,
-            aws_api_gateway_method.delete_topic.id,
-            aws_api_gateway_method.options_topic.id,
-            aws_api_gateway_method.get_topics.id,
-            aws_api_gateway_method.delete_topics.id,
-            aws_api_gateway_method.options_topics.id,
             aws_api_gateway_integration.get_questions_integration.id,
             aws_api_gateway_integration.post_questions_integration.id,
             aws_api_gateway_integration.options_questions.id,
@@ -41,7 +24,10 @@ resource "aws_api_gateway_deployment" "prod" {
             aws_api_gateway_integration.options_topic.id,
             aws_api_gateway_integration.get_topics.id,
             aws_api_gateway_integration.delete_topics.id,
-            aws_api_gateway_integration.options_topics.id
+            aws_api_gateway_integration.options_topics.id,
+            aws_api_gateway_integration_response.options_questions.id,
+            aws_api_gateway_integration_response.options_topic.id,
+            aws_api_gateway_integration_response.options_topics.id,
         ]))
     }
 
@@ -62,7 +48,10 @@ resource "aws_api_gateway_deployment" "prod" {
         aws_api_gateway_integration.options_topic,
         aws_api_gateway_integration.get_topics,
         aws_api_gateway_integration.delete_topics,
-        aws_api_gateway_integration.options_topics
+        aws_api_gateway_integration.options_topics,
+        aws_api_gateway_integration_response.options_questions,
+        aws_api_gateway_integration_response.options_topic,
+        aws_api_gateway_integration_response.options_topics,
     ]
 }
 
