@@ -29,8 +29,8 @@ module "lambda-role" {
 module "questions-db" {
     source = "./modules/dynamodb"
     table_name = "question-db"
-    hash_key = "question_id"
-    range_key = "question_type"
+    hash_key = "username"
+    range_key = "topic"
 }
 
 # Module for creating a DynamoDB table for attempts
