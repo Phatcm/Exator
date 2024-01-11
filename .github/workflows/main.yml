@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - master
-      - phat
     paths:
       - "resources/**"
       - "terraform/**"
