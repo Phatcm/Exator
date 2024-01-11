@@ -25,6 +25,22 @@ resource "aws_api_gateway_deployment" "prod" {
     lifecycle {
         create_before_destroy = true
     }
+    depends_on = [
+        aws_api_gateway_method.get_health,
+        aws_api_gateway_method.get_topics,
+        aws_api_gateway_method.options_topics,
+        aws_api_gateway_method.delete_topics,
+        aws_api_gateway_method.get_topic,
+        aws_api_gateway_method.options_topic,
+        aws_api_gateway_method.delete_topic,
+        aws_api_gateway_method.options_questions,
+        aws_api_gateway_method.post_questions,
+        aws_api_gateway_method.get_questions,
+        aws_api_gateway_method.patch_question,
+        aws_api_gateway_method.delete_question,
+        aws_api_gateway_method.get_question,
+        aws_api_gateway_method.post_question
+    ]
 }
 
 resource "aws_api_gateway_stage" "api_stage" {
