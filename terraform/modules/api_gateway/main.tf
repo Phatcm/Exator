@@ -10,29 +10,8 @@ resource "aws_api_gateway_rest_api" "api_gateway" {
 resource "aws_api_gateway_deployment" "prod" {
     rest_api_id = aws_api_gateway_rest_api.api_gateway.id
 
-    triggers = {
-        redeployment = sha1(jsonencode([
-            aws_api_gateway_integration.get_questions_integration.id,
-            aws_api_gateway_integration.post_questions_integration.id,
-            aws_api_gateway_integration.options_questions.id,
-            aws_api_gateway_integration.get_question_integration.id,
-            aws_api_gateway_integration.post_question_integration.id,
-            aws_api_gateway_integration.patch_question_integration.id,
-            aws_api_gateway_integration.delete_question_integration.id,
-            aws_api_gateway_integration.get_topic.id,
-            aws_api_gateway_integration.delete_topic.id,
-            aws_api_gateway_integration.options_topic.id,
-            aws_api_gateway_integration.get_topics.id,
-            aws_api_gateway_integration.delete_topics.id,
-            aws_api_gateway_integration.options_topics.id,
-            aws_api_gateway_integration_response.options_questions.id,
-            aws_api_gateway_integration_response.options_topic.id,
-            aws_api_gateway_integration_response.options_topics.id,
-        ]))
-    }
-
     lifecycle {
-        create_before_destroy = false
+        create_before_destroy = true
     }
 
     depends_on = [
