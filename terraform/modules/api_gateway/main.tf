@@ -10,14 +10,18 @@ resource "aws_api_gateway_rest_api" "api_gateway" {
 resource "aws_api_gateway_deployment" "prod" {
     rest_api_id = aws_api_gateway_rest_api.api_gateway.id
 
-    stage_description = md5(join("", [
-        file("modules/api_gateway/main.tf"), 
-        file("modules/api_gateway/resource_health.tf"), 
-        file("modules/api_gateway/resource_question.tf"), 
-        file("modules/api_gateway/resource_questions.tf"), 
-        file("modules/api_gateway/resource_topic.tf"), 
-        file("modules/api_gateway/resource_topics.tf")
-    ]))
+    triggers = {
+    redeployment = sha1(
+            jsonencode([
+                file("modules/api_gateway/main.tf"), 
+                file("modules/api_gateway/resource_health.tf"), 
+                file("modules/api_gateway/resource_question.tf"), 
+                file("modules/api_gateway/resource_questions.tf"), 
+                file("modules/api_gateway/resource_topic.tf"), 
+                file("modules/api_gateway/resource_topics.tf")
+            ])
+        )
+    }
     lifecycle {
         create_before_destroy = true
     }
