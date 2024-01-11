@@ -2,6 +2,8 @@ import boto3
 import json
 import logging
 from custom_encoder import CustomEncoder
+from boto3.dynamodb.conditions import Key
+
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
@@ -17,48 +19,37 @@ healthPath = "/health"
 questionPath = "/question"
 questionsPath = "/questions"
 topicPath = "/topic"
+topicsPath = "/topics"
 
 
 def lambda_handler(event, context):
-    logger.info(event)
     httpMethod = event["httpMethod"]
     path = event["path"]
     
-    if httpMethod == getMethod and path == healthPath:
-        response = buildResponse(200, "Connection is OK")
-        
-    elif httpMethod == getMethod and path == questionsPath:
-        response = getQuestions(event["queryStringParameters"]["username"])
-        
-    elif httpMethod == postMethod and path == questionsPath:
-        #loop to save all questions
-        response = saveQuestions(json.loads(event["body"]))
-        
-    elif httpMethod == getMethod and path == questionPath:
-        response = getQuestion(event["queryStringParameters"]["questionId"])
-        
-    elif httpMethod == postMethod and path == questionPath:
-        response = saveQuestion(json.loads(event["body"]))
-        
-    elif httpMethod == patchMethod and path == questionPath:
-        requestBody = json.loads(event["body"])
-        response = modifyQuestion(requestBody["questionId"], requestBody["updateKey"], requestBody["updateValue"])
-        
-    elif httpMethod == deleteMethod and path == questionPath:
-        requestBody = json.loads(event["body"])
-        response = deleteQuestion(requestBody["questionId"])
-    
-    elif httpMethod == getMethod and path == topicPath:
-        response = deleteTopic(event["queryStringParameters"]["topic"])
-        
-    elif httpMethod == deleteMethod and path == topicPath:
-        response = deleteTopic(event["queryStringParameters"])
-    
-    elif httpMethod == "OPTIONS":
-        response = buildResponse(200)
-    else:
-        response = buildResponse(404, "Not Found")
-    
+    # Define a dictionary to map (httpMethod, path) to the corresponding function
+    func_dict = {
+        #Health Check
+        (getMethod, healthPath): lambda: buildResponse(200, "Connection is OK"),
+        #Get Questions
+        (getMethod, questionsPath): lambda: getQuestions(event["queryStringParameters"]),
+        #Save Questions
+        (postMethod, questionsPath): lambda: saveQuestions(json.loads(event["body"])),
+        #Get Question
+        (getMethod, questionPath): lambda: getQuestion(event["queryStringParameters"]["questionId"]),
+        #Save Question
+        (postMethod, questionPath): lambda: saveQuestion(json.loads(event["body"])),
+        #Modify Question
+        (patchMethod, questionPath): lambda: modifyQuestion(json.loads(event["body"])["questionId"], json.loads(event["body"])["updateKey"], json.loads(event["body"])["updateValue"]),
+        #Delete Question
+        (deleteMethod, questionPath): lambda: deleteQuestion(json.loads(event["body"])["questionId"]),
+        #Get Topics
+        (getMethod, topicsPath): lambda: getTopics(event["queryStringParameters"]),
+        #Delete Topic
+        (deleteMethod, topicPath): lambda: deleteTopic(event["queryStringParameters"])
+    }
+
+    # Get the function from the dictionary and call it
+    response = func_dict.get((httpMethod, path), lambda: buildResponse(404, "Not Found"))()
     
     return response
 
@@ -76,10 +67,13 @@ def getQuestion(questionId):
     except:
         logger.exception("Do your custom error handling here. I am just gonna log it our here!!")
 
-def getQuestions(username):
+def getQuestions(parameter):
     try:
+        name = parameter["username"]
+        topic = parameter["topic"]
+        
         response = table.query(
-            KeyConditionExpression=boto3.dynamodb.conditions.Key('username').eq(username)
+            KeyConditionExpression=Key('username').eq(name)&Key('topic').eq(topic)
         )
         result = response["Items"]
 
@@ -93,14 +87,16 @@ def getQuestions(username):
 
 def saveQuestions(requestBody):
     try:
-        name = requestBody["name"]
+        name = requestBody["username"]
         topic = requestBody["topic"]
+        description = requestBody["description"]
         questions = requestBody["questions"].split("\n") #Split the question by line
         
         for question in questions:
             questionBody = {
-                "name": name,
+                "username": name,
                 "topic": topic,
+                "description": description,
                 "questions": question
             }
             print(questionBody)
@@ -112,8 +108,9 @@ def saveQuestions(requestBody):
 
 def saveQuestion(requestBody):
     try:
-        name = requestBody["name"]
+        name = requestBody["username"]
         topic = requestBody["topic"]
+        description = requestBody["description"]
         
         response = table.get_item(
             Key={
@@ -137,6 +134,7 @@ def saveQuestion(requestBody):
             Item={
                 "username": name,
                 "topic": topic,
+                "description": description,
                 "questions": old_questions
             }
         )
@@ -144,6 +142,22 @@ def saveQuestion(requestBody):
     except:
         logger.exception("Do your custom error handling here. I am just gonna log it our here!!")
 
+    
+def parse_question(question):
+    
+    if "|" in question:
+        ques_explain = question.split("|")
+        question = ques_explain[0]
+        explain = "".join(ques_explain[1:])
+        print(explain)
+    else:
+        explain = "NULL"
+        
+    question_parts = question.split("-")
+    question_text = question_parts[0]  # Separate the question from the answers
+    answers = [answer.strip() for answer in question_parts[1:]]  # Remove leading/trailing whitespace
+    
+    return (question_text, answers, explain)
 
 def modifyQuestion(questionId, updateKey, updateValue):
     try:
@@ -201,28 +215,56 @@ def deleteTopic(parameter):
             "Message": "SUCCESS",
             "deltedItem": response
         }
-        return buildResponse(200, body)
+        temp = buildResponse(200, body)
+        return temp
         
     except:
         logger.exception("Do your custom error handling here. I am just gonna log it our here!!")
+
+def getTopics(parameter):
+    if parameter is not None and "username" in parameter:
+        try:
+            name = parameter["username"]
+            response = table.query(
+                KeyConditionExpression=Key('username').eq(name),
+                ProjectionExpression="username, topic, description"
+            )
+            body = response["Items"]
+            temp = buildResponse(200, body)
+            return temp
+        except:
+            logger.exception("Do your custom error handling here. I am just gonna log it our here!!")
+            
+    else:
+        try:
+            response = table.scan(
+                ProjectionExpression="username, topic, description"
+            )
+            body = response["Items"]
+            while "LastEvaluateKey" in response:
+                response = table.scan(
+                    ExclusiveStartKey=response["LastEvaluatedKey"],
+                    ProjectionExpression="username, topic, description"
+                )
+                body.extend(response["Items"])
+            
+            temp = buildResponse(200, body)
+            return temp
+        except:
+            logger.exception("Do your custom error handling here. I am just gonna log it our here!!")
+
 
 def buildResponse(statusCode, body=None):
     response = {
         "statusCode": statusCode,
         "headers": {
             "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",  # Allows any domain to make requests
-            "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",  # Allows these HTTP methods
-            "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",  # Allows these headers
+            "Access-Control-Allow-Origin": "*", 
+            "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token",
         }
     }
 
     if body is not None:
         response["body"] = json.dumps(body, cls=CustomEncoder)
     return response
-    
-def parse_question(question):
-    question_parts = question.split("-")
-    question_text = question_parts[0]  # Separate the question from the answers
-    answers = [answer.strip() for answer in question_parts[1:]]  # Remove leading/trailing whitespace
-    return (question_text, answers)
