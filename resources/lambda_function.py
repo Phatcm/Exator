@@ -149,7 +149,6 @@ def parse_question(question):
         ques_explain = question.split("|")
         question = ques_explain[0]
         explain = "".join(ques_explain[1:])
-        print(explain)
     else:
         explain = "NULL"
         
