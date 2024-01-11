@@ -76,6 +76,7 @@ def getQuestions(parameter):
             KeyConditionExpression=Key('username').eq(name)&Key('topic').eq(topic)
         )
         result = response["Items"]
+        print(result)
 
         # while "LastEvaluateKey" in response:
         #     response = table.scan(ExclusiveStartKey=response["LastEvaluatedKey"])
