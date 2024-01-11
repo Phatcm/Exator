@@ -32,7 +32,7 @@ resource "aws_api_gateway_deployment" "prod" {
     }
 
     lifecycle {
-        create_before_destroy = true
+        create_before_destroy = false
     }
 
     depends_on = [
