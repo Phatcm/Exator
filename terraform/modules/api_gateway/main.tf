@@ -11,7 +11,7 @@ resource "aws_api_gateway_deployment" "prod" {
     rest_api_id = aws_api_gateway_rest_api.api_gateway.id
 
     triggers = {
-    redeployment = sha1(
+        redeployment = sha1(
             jsonencode([
                 file("modules/api_gateway/main.tf"), 
                 file("modules/api_gateway/resource_health.tf"), 
@@ -22,6 +22,7 @@ resource "aws_api_gateway_deployment" "prod" {
             ])
         )
     }
+    
     lifecycle {
         create_before_destroy = true
     }
