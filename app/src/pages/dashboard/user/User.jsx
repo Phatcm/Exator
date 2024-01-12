@@ -1,14 +1,28 @@
-import React from "react";
-import ThemeItem from "../../component/theme-item/ThemeItem";
-import { items } from "./themeItems";
-import Pagination from "../../component/pagination/Pagination";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { BsChevronCompactRight } from "react-icons/bs";
 import { PiFinnTheHumanFill } from "react-icons/pi";
+import axios from "axios";
+import ThemeItem from "../../../component/theme-item/ThemeItem";
+import Pagination from "../../../component/pagination/Pagination";
 
 export default function User() {
   const { user } = useParams();
   const navigate = useNavigate();
+  const [themes, setThemes] = useState([]);
+
+  useEffect(() => {
+    const getThemes = async () => {
+      const url = `https://y6lgr4ka12.execute-api.ap-northeast-1.amazonaws.com/prod/topics?username=${user}`;
+      const response = await axios.get(url);
+
+      const data = response.data;
+      console.log(data);
+      setThemes(data);
+    };
+    getThemes();
+    return () => {};
+  }, []);
   return (
     <div className="h-full flex flex-col">
       {/* <h1 className="mt-2 text-[20px] font-semibold">Dashboard</h1> */}
@@ -46,12 +60,12 @@ export default function User() {
           </div>
           <div className="mt-4">
             <div className="lg:grid-cols-3 md:grid-cols-2 grid-cols-1 grid gap-4 mt-4 relative z-10">
-              {items.map((item, key) => (
+              {themes.map((theme, key) => (
                 <ThemeItem
                   key={key}
-                  name={item.name}
-                  decription={item.description}
-                  user={item.user}
+                  name={theme.topic}
+                  decription={theme.description}
+                  user={theme.username}
                 ></ThemeItem>
               ))}
             </div>

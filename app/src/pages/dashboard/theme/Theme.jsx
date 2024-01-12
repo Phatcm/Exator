@@ -7,30 +7,31 @@ import { functionItems } from "./functionThemeItems";
 import FunctionTheme from "../../../component/function-theme/FunctionTheme";
 import Card from "../../../component/card/Card";
 import axios from "axios";
+import NotFound from "../../notfound/NotFound";
 
 export default function Theme() {
   const { user, theme } = useParams();
   const navigate = useNavigate();
 
   const [questions, setQuestions] = useState([]);
-
+  const [topic, setTopic] = useState(null);
   useEffect(() => {
     const getThemes = async () => {
-      const url =
-        "https://r784c4ffca.execute-api.ap-northeast-1.amazonaws.com/prod/questions?username=nice";
+      const url = `https://y6lgr4ka12.execute-api.ap-northeast-1.amazonaws.com/prod/questions?username=${user}&topic=${theme}`;
       const response = await axios.get(url);
 
       const data = response.data;
-
-      const questions = data.find(
-        (element) => element.username === user && element.topic === theme
-      ).questions;
-      setQuestions(questions);
+      console.log(data);
+      if (data[0]) {
+        setTopic(data[0]);
+        setQuestions(data[0].questions);
+        console.log(data[0].questions);
+      }
     };
     getThemes();
     return () => {};
   }, []);
-  return (
+  return topic ? (
     <div className="h-full flex flex-col">
       {/* <h1 className="mt-2 text-[20px] font-semibold">Dashboard</h1> */}
       <div className="w-full flex flex-col flex-1 bg-white rounded-xl p-4 pt-0 mt-4 relative overflow-y-auto">
@@ -57,15 +58,10 @@ export default function Theme() {
         </div>
         <div className="mt-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-[32px] font-semibold">lore</h1>
+            <h1 className="text-[32px] font-semibold">{topic.topic}</h1>
             <IoStarOutline className="mr-2 text-[28px] text-yellow-600"></IoStarOutline>
           </div>
-          <p className="mt-2">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Perferendis, culpa doloremque dolor, aperiam reiciendis ad illo modi
-            voluptas doloribus minima quam dicta ratione alias quisquam unde
-            aspernatur magni expedita cumque?
-          </p>
+          <p className="mt-2">{topic.description}</p>
         </div>
         <div className="flex mt-8 gap-3 flex-wrap justify-end">
           {functionItems.map((item, key) => (
@@ -84,7 +80,8 @@ export default function Theme() {
             <Card
               key={key}
               question={question[0]}
-              selections={question[1]}
+              answers={question[1]}
+              explain={question[2]}
             ></Card>
           ))}
         </div>
@@ -93,5 +90,7 @@ export default function Theme() {
         </div>
       </div>
     </div>
+  ) : (
+    <NotFound></NotFound>
   );
 }

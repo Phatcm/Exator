@@ -4,14 +4,14 @@ import React from "react";
 export default function AdminPage() {
   const click = async () => {
     const response = await axios.post(
-      "https://0ngec1ipbc.execute-api.ap-northeast-1.amazonaws.com/dev/mypath"
+      "https://fv6ruhkuue.execute-api.ap-northeast-1.amazonaws.com/dev/mypath"
     );
 
     console.log(response);
   };
   const click2 = async () => {
     const response = await axios.delete(
-      "https://0ngec1ipbc.execute-api.ap-northeast-1.amazonaws.com/dev/mypath"
+      "https://r784c4ffca.execute-api.ap-northeast-1.amazonaws.com/prod/topic?username=nice&topic=test1"
     );
 
     console.log(response);
