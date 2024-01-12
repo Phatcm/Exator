@@ -6,7 +6,7 @@ import DashBoardPage from "./pages/dashboard/DashBoardPage";
 import NavigationMenu from "./component/navigation-menu/NavigationMenu";
 import Header from "./component/header/Header";
 import MyLibrary from "./pages/my-library/MyLibrary";
-import User from "./pages/user/User";
+import User from "./pages/dashboard/user/User";
 import NotFound from "./pages/notfound/NotFound";
 import Theme from "./pages/dashboard/theme/Theme";
 import MyTheme from "./pages/my-library/my-theme/MyTheme";
@@ -19,7 +19,7 @@ function App() {
         <div className="h-[60px]">
           <Header></Header>
         </div>
-        <div className="h-[calc(100%-60px)]">
+        <div className="h-[calc(100%-76px)] mt-4">
           <Routes>
             <Route path="/" element={<DashBoardPage />} />
             <Route path="/dashboard" element={<DashBoardPage />} />
