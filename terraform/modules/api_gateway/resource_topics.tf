@@ -1,11 +1,11 @@
-# topics resource
+#TOPICS RESOURCE
 resource "aws_api_gateway_resource" "topics" {
     rest_api_id = aws_api_gateway_rest_api.api_gateway.id
     parent_id   = aws_api_gateway_rest_api.api_gateway.root_resource_id
     path_part   = "topics"
 }
 
-#Get topics
+#GET
 resource "aws_api_gateway_method" "get_topics" {
     rest_api_id   = aws_api_gateway_rest_api.api_gateway.id
     resource_id   = aws_api_gateway_resource.topics.id
@@ -22,7 +22,7 @@ resource "aws_api_gateway_integration" "get_topics" {
     uri                     = var.lambda_invoke_arn
 }
 
-#Delete_topics
+#DELETE
 resource "aws_api_gateway_method" "delete_topics" {
     rest_api_id   = aws_api_gateway_rest_api.api_gateway.id
     resource_id   = aws_api_gateway_resource.topics.id
@@ -39,7 +39,7 @@ resource "aws_api_gateway_integration" "delete_topics" {
     uri                     = var.lambda_invoke_arn
 }
 
-#Options_topics
+#OPTIONS
 resource "aws_api_gateway_method" "options_topics" {
     rest_api_id   = aws_api_gateway_rest_api.api_gateway.id
     resource_id   = aws_api_gateway_resource.topics.id
@@ -55,6 +55,9 @@ resource "aws_api_gateway_integration" "options_topics" {
     type                    = "MOCK"
     request_templates = {
         "application/json" = "{\"statusCode\": 200}"
+    }
+    lifecycle {
+        ignore_changes = [integration_http_method]
     }
 }
 

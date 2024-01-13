@@ -13,34 +13,57 @@ resource "aws_api_gateway_deployment" "prod" {
     triggers = {
         redeployment = sha1(
             jsonencode([
-                file("modules/api_gateway/main.tf"), 
                 file("modules/api_gateway/resource_health.tf"), 
                 file("modules/api_gateway/resource_question.tf"), 
                 file("modules/api_gateway/resource_questions.tf"), 
                 file("modules/api_gateway/resource_topic.tf"), 
-                file("modules/api_gateway/resource_topics.tf")
+                file("modules/api_gateway/resource_topics.tf"),
+                file("modules/api_gateway/resource_exam.tf")
             ])
         )
     }
-    
+
     lifecycle {
         create_before_destroy = true
     }
     depends_on = [
-        aws_api_gateway_method.get_health,
-        aws_api_gateway_method.get_topics,
-        aws_api_gateway_method.options_topics,
-        aws_api_gateway_method.delete_topics,
-        aws_api_gateway_method.get_topic,
-        aws_api_gateway_method.options_topic,
-        aws_api_gateway_method.delete_topic,
-        aws_api_gateway_method.options_questions,
-        aws_api_gateway_method.post_questions,
-        aws_api_gateway_method.get_questions,
-        aws_api_gateway_method.patch_question,
-        aws_api_gateway_method.delete_question,
-        aws_api_gateway_method.get_question,
-        aws_api_gateway_method.post_question
+        #questions
+        aws_api_gateway_integration.get_questions_integration,
+        aws_api_gateway_integration.post_questions_integration,
+        aws_api_gateway_integration.patch_questions_integration,
+        aws_api_gateway_integration.options_questions,
+        aws_api_gateway_method_response.options_questions,
+
+        #question
+        aws_api_gateway_integration.get_question_integration,
+        aws_api_gateway_integration.post_question_integration,
+        aws_api_gateway_integration.patch_question_integration,
+        aws_api_gateway_integration.delete_question_integration,
+        aws_api_gateway_integration.options_question,
+        aws_api_gateway_method_response.options_question,
+        aws_api_gateway_integration_response.options_question,
+        aws_api_gateway_integration_response.options_questions,
+
+        #topics
+        aws_api_gateway_integration.get_topics,
+        aws_api_gateway_integration.delete_topics,
+        aws_api_gateway_integration.options_topics,
+        aws_api_gateway_method_response.options_topics,
+        aws_api_gateway_integration_response.options_topics,
+
+        #topic
+        aws_api_gateway_integration.get_topic,
+        aws_api_gateway_integration.delete_topic,
+        aws_api_gateway_integration.options_topic,
+        aws_api_gateway_method_response.options_topic,
+        aws_api_gateway_integration_response.options_topic,
+
+        #exam
+        aws_api_gateway_integration.get_exam_integration,
+        aws_api_gateway_integration.post_exam_integration,
+        aws_api_gateway_integration.options_exam,
+        aws_api_gateway_method_response.options_exam,
+        aws_api_gateway_integration_response.options_exam,   
     ]
 }
 

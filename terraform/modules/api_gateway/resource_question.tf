@@ -1,10 +1,11 @@
-# Question resource
+#QUESTION RESOURCE
 resource "aws_api_gateway_resource" "question" {
     rest_api_id = aws_api_gateway_rest_api.api_gateway.id
     parent_id   = aws_api_gateway_rest_api.api_gateway.root_resource_id
     path_part   = "question"
 }
 
+#GET
 resource "aws_api_gateway_method" "get_question" {
     rest_api_id   = aws_api_gateway_rest_api.api_gateway.id
     resource_id   = aws_api_gateway_resource.question.id
@@ -21,6 +22,7 @@ resource "aws_api_gateway_integration" "get_question_integration" {
     uri                     = var.lambda_invoke_arn
 }
 
+#POST
 resource "aws_api_gateway_method" "post_question" {
     rest_api_id   = aws_api_gateway_rest_api.api_gateway.id
     resource_id   = aws_api_gateway_resource.question.id
@@ -37,6 +39,7 @@ resource "aws_api_gateway_integration" "post_question_integration" {
     uri                     = var.lambda_invoke_arn
 }
 
+#PATCH
 resource "aws_api_gateway_method" "patch_question" {
     rest_api_id   = aws_api_gateway_rest_api.api_gateway.id
     resource_id   = aws_api_gateway_resource.question.id
@@ -53,6 +56,7 @@ resource "aws_api_gateway_integration" "patch_question_integration" {
     uri                     = var.lambda_invoke_arn
 }
 
+#DELETE
 resource "aws_api_gateway_method" "delete_question" {
     rest_api_id   = aws_api_gateway_rest_api.api_gateway.id
     resource_id   = aws_api_gateway_resource.question.id
@@ -69,7 +73,7 @@ resource "aws_api_gateway_integration" "delete_question_integration" {
     uri                     = var.lambda_invoke_arn
 }
 
-#Options_question
+#OPTIONS
 resource "aws_api_gateway_method" "options_question" {
     rest_api_id   = aws_api_gateway_rest_api.api_gateway.id
     resource_id   = aws_api_gateway_resource.question.id
@@ -85,6 +89,9 @@ resource "aws_api_gateway_integration" "options_question" {
     type                    = "MOCK"
     request_templates = {
         "application/json" = "{\"statusCode\": 200}"
+    }
+    lifecycle {
+        ignore_changes = [integration_http_method]
     }
 }
 
@@ -111,7 +118,7 @@ resource "aws_api_gateway_integration_response" "options_question" {
   //cors
   response_parameters = {
     "method.response.header.Access-Control-Allow-Headers" =  "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
-    "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS,POST,PUT,DELETE'",
+    "method.response.header.Access-Control-Allow-Methods" = "'GET,PATCH,OPTIONS,POST,PUT,DELETE'",
     "method.response.header.Access-Control-Allow-Origin" = "'*'"
   }
   depends_on = [

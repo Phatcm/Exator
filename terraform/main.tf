@@ -37,8 +37,8 @@ module "questions-db" {
 module "attempts-db" {
     source = "./modules/dynamodb"
     table_name = "attempts-db"
-    hash_key = "user_name"
-    range_key = "score"
+    hash_key = "username"
+    range_key = "attempt_id"
 }
 
 # Module for creating an S3 bucket for results
