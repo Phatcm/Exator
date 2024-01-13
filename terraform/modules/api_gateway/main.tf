@@ -11,58 +11,59 @@ resource "aws_api_gateway_deployment" "prod" {
     rest_api_id = aws_api_gateway_rest_api.api_gateway.id
 
     triggers = {
-        redeployment = sha1(jsonencode([
-            aws_api_gateway_resource.questions.id,
-            aws_api_gateway_resource.question.id,
-            aws_api_gateway_resource.topic.id,
-            aws_api_gateway_resource.topics.id,
-            aws_api_gateway_method.get_questions.id,
-            aws_api_gateway_method.post_questions.id,
-            aws_api_gateway_method.options_questions.id,
-            aws_api_gateway_method.get_question.id,
-            aws_api_gateway_method.post_question.id,
-            aws_api_gateway_method.patch_question.id,
-            aws_api_gateway_method.delete_question.id,
-            aws_api_gateway_method.get_topic.id,
-            aws_api_gateway_method.delete_topic.id,
-            aws_api_gateway_method.options_topic.id,
-            aws_api_gateway_method.get_topics.id,
-            aws_api_gateway_method.delete_topics.id,
-            aws_api_gateway_method.options_topics.id,
-            aws_api_gateway_integration.get_questions_integration.id,
-            aws_api_gateway_integration.post_questions_integration.id,
-            aws_api_gateway_integration.options_questions.id,
-            aws_api_gateway_integration.get_question_integration.id,
-            aws_api_gateway_integration.post_question_integration.id,
-            aws_api_gateway_integration.patch_question_integration.id,
-            aws_api_gateway_integration.delete_question_integration.id,
-            aws_api_gateway_integration.get_topic.id,
-            aws_api_gateway_integration.delete_topic.id,
-            aws_api_gateway_integration.options_topic.id,
-            aws_api_gateway_integration.get_topics.id,
-            aws_api_gateway_integration.delete_topics.id,
-            aws_api_gateway_integration.options_topics.id
-        ]))
+        redeployment = sha1(
+            jsonencode([
+                file("modules/api_gateway/resource_health.tf"), 
+                file("modules/api_gateway/resource_question.tf"), 
+                file("modules/api_gateway/resource_questions.tf"), 
+                file("modules/api_gateway/resource_topic.tf"), 
+                file("modules/api_gateway/resource_topics.tf"),
+                file("modules/api_gateway/resource_exam.tf")
+            ])
+        )
     }
 
     lifecycle {
         create_before_destroy = true
     }
-
     depends_on = [
+        #questions
         aws_api_gateway_integration.get_questions_integration,
         aws_api_gateway_integration.post_questions_integration,
+        aws_api_gateway_integration.patch_questions_integration,
         aws_api_gateway_integration.options_questions,
+        aws_api_gateway_method_response.options_questions,
+
+        #question
         aws_api_gateway_integration.get_question_integration,
         aws_api_gateway_integration.post_question_integration,
         aws_api_gateway_integration.patch_question_integration,
         aws_api_gateway_integration.delete_question_integration,
+        aws_api_gateway_integration.options_question,
+        aws_api_gateway_method_response.options_question,
+        aws_api_gateway_integration_response.options_question,
+        aws_api_gateway_integration_response.options_questions,
+
+        #topics
+        aws_api_gateway_integration.get_topics,
+        aws_api_gateway_integration.delete_topics,
+        aws_api_gateway_integration.options_topics,
+        aws_api_gateway_method_response.options_topics,
+        aws_api_gateway_integration_response.options_topics,
+
+        #topic
         aws_api_gateway_integration.get_topic,
         aws_api_gateway_integration.delete_topic,
         aws_api_gateway_integration.options_topic,
-        aws_api_gateway_integration.get_topics,
-        aws_api_gateway_integration.delete_topics,
-        aws_api_gateway_integration.options_topics
+        aws_api_gateway_method_response.options_topic,
+        aws_api_gateway_integration_response.options_topic,
+
+        #exam
+        aws_api_gateway_integration.get_exam_integration,
+        aws_api_gateway_integration.post_exam_integration,
+        aws_api_gateway_integration.options_exam,
+        aws_api_gateway_method_response.options_exam,
+        aws_api_gateway_integration_response.options_exam,   
     ]
 }
 
