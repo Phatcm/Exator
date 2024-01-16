@@ -12,7 +12,7 @@ export default function CardEdit({
   const textareaQuestionRef = useRef(null);
   const textareaAnswerRef = useRef(null);
   const textareaExplainRef = useRef(null);
-
+  console.log(explain);
   const [currentQuestionValue, setCurrentQuestionValue] = useState(question);
   const [currentAnswerValue, setCurrentAnswerValue] = useState(() => {
     const newAnswers = answers.join("\n");
