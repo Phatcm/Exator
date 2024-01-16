@@ -13,6 +13,7 @@ export default function DashBoardPage() {
     const getThemes = async () => {
       setLoading(true);
       const url = `${process.env.REACT_APP_URL}/topics`;
+      console.log(url);
       const response = await axios.get(url);
 
       const data = response.data;
@@ -33,7 +34,7 @@ export default function DashBoardPage() {
           <div className="flex"></div>
         </div>
         {!loading ? (
-          <div className="">
+          <div className="flex-1 flex flex-col">
             <div className="lg:grid-cols-3 md:grid-cols-2 grid-cols-1 grid gap-4 mt-4 relative z-10">
               {themes?.map((theme, key) => (
                 <ThemeItem
@@ -45,7 +46,7 @@ export default function DashBoardPage() {
               ))}
             </div>
             <div className="flex justify-center pt-4 mt-auto">
-              <Pagination></Pagination>
+              {/* <Pagination></Pagination> */}
             </div>
           </div>
         ) : (

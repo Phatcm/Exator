@@ -14,11 +14,14 @@ export default function ResultExam({ score, yourTime }) {
           <p className="text-[20px]">Your time: {yourTime} min</p>
         </div>
         <div className="flex flex-col gap-4">
-          <div className="flex gap-4 items-center p-4 bg-gray-700 rounded-xl">
+          <div className="flex gap-4 items-center p-4 bg-gray-700 rounded-xl h-[100px]">
             <div className="">
               <SiCodereview className="text-[42px] text-[#eff7f9]"></SiCodereview>
             </div>
-            <p className="text-[#eff7f9] font-semibold">Review an exam</p>
+            <div className="">
+              <p className="text-[#eff7f9] font-semibold">Review an exam</p>
+              <p>Review your exam to see more infomation.</p>
+            </div>
             <div className="text-[#eff7f9]">
               <FaChevronRight></FaChevronRight>
             </div>
