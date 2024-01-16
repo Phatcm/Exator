@@ -15,10 +15,12 @@ export default function ThemeItem({ name, decription, user }) {
             hover:after:opacity-100"
       onClick={() => navigate(`/dashboard/${user}/${name}`)}
     >
-      <p className="font-semibold group-hover:text-[#286575]">{name}</p>
-      <p className="text-[14px] mt-1 themItem_limited-lines">{decription}</p>
-      <div className="flex">
-        <p className="mt-auto hover:text-[#286575]" onClick={userClick}>
+      <p className="font-semibold group-hover:text-[#286575] text-[18px]">
+        {name}
+      </p>
+      <p className="text-[14px] mt-1 themeItem_limited-lines">{decription}</p>
+      <div className="mt-auto pt-2">
+        <p className=" inline-block hover:text-[#286575]" onClick={userClick}>
           @{user}
         </p>
       </div>

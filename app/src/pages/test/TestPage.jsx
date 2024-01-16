@@ -1,31 +1,44 @@
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { FaChevronRight } from "react-icons/fa6";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { FaChevronDown } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { setExam } from "../../redux/examSlice";
 
 export default function TestPage() {
+  const dispatch = useDispatch();
   let [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [usernameValue, setUsernameValue] = useState("");
+  const [topicValue, setTopicValue] = useState("");
+  const [number, setNumber] = useState(40);
+  const [time, setTime] = useState(60);
 
   const createTest = async () => {
-    const url =
-      "https://y6lgr4ka12.execute-api.ap-northeast-1.amazonaws.com/prod/exam";
-    const body = {
+    const url = `https://y6lgr4ka12.execute-api.ap-northeast-1.amazonaws.com/prod/exam`;
+    const params = {
+      owner: "nice",
       username: "nice",
-      topic: "test1",
-      questions: [
-        [
-          "What is the capital of VN?",
-          ["London", "Berlin", ">*Paris", "Rome"],
-          "This is the explain",
-        ],
-        ["What is myname?", ["Green", ">*Blue", "Red", "Black"], "NULL"],
-      ],
-      length: "56:00",
+      topic: "t1",
+      number: 60,
     };
-    const response = await axios.post(url, body);
-    console.log(response);
+    const response = await axios.get(url, { params: params });
+    if (response.status === 200) {
+      const data = response.data;
+      const payload = {
+        questions: data[Object.keys(data)[0]],
+        time: 60,
+        user: "nice",
+        director: "nice",
+        topic: "t1",
+        id: Object.keys(data)[0],
+      };
+      dispatch(setExam(payload));
+      navigate("/test/exam");
+    }
   };
+
   return (
     <div className="h-full flex flex-col">
       {/* <h1 className="mt-2 text-[20px] font-semibold">Dashboard</h1> */}
@@ -47,7 +60,8 @@ export default function TestPage() {
                   <input
                     className="w-full h-full text-[18px] outline-none bg-[#eff7f9]"
                     type="text"
-                    placeholder="Enter a title, like 'Biology'"
+                    placeholder="Enter a username..."
+                    onChange={(e) => setUsernameValue(e.target.value)}
                   />
                 </div>
                 <div className="p-2">
@@ -62,7 +76,8 @@ export default function TestPage() {
                   <input
                     className="w-full h-full text-[18px] outline-none bg-[#eff7f9]"
                     type="text"
-                    placeholder="Enter a title, like 'Biology'"
+                    placeholder="Enter a topic ..."
+                    onChange={(e) => setTopicValue(e.target.value)}
                   />
                 </div>
                 <div className="p-2">
@@ -95,7 +110,7 @@ export default function TestPage() {
                 </div>
               </div>
             </div>
-            <div className="w-[65%] border border-black rounded-xl"></div>
+            <div className="w-[65%] border-2 p-2 border-[#94b2ba] rounded-xl"></div>
           </div>
         </div>
         <div className="mt-auto pt-4 flex justify-end">

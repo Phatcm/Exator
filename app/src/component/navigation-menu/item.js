@@ -20,11 +20,16 @@ export const items = [
     name: "Test",
     Icon: FaRegNoteSticky,
     link: "/test",
-  },
-  {
-    name: "History",
-    Icon: GoHistory,
-    link: "/history",
+    child: [
+      {
+        name: "Create a test",
+        link: "/maketest",
+      },
+      {
+        name: "History",
+        link: "/history",
+      },
+    ],
   },
   {
     name: "Favorite",

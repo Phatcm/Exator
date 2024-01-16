@@ -7,7 +7,7 @@ export default function MyThemeItem({ name, decription, user }) {
 
   return (
     <div
-      className="group p-2 rounded-xl bg-[#eff7f9] flex flex-col cursor-pointer relative overflow-hidden h-[120px]
+      className="group p-2 rounded-xl bg-[#eff7f9] flex flex-col cursor-pointer relative overflow-hidden max-h-[120px]
             after:content-[''] after:absolute after:h-1 after:w-full after:bg-black after:left-0 after:bottom-0 after:opacity-0 after:transition-all
             hover:after:opacity-100"
       onClick={() => navigate(`/mylibrary/${name}`)}
