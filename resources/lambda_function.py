@@ -1,5 +1,8 @@
 import json
 import logging
+import csv
+import base64
+from io import StringIO
 
 from def_buildresponse import buildResponse
 from def_questions import getQuestions, saveQuestions, modifyQuestions
@@ -21,7 +24,6 @@ questionsPath = "/questions"
 topicPath = "/topic"
 topicsPath = "/topics"
 examPath = "/exam"
-
 
 def lambda_handler(event, context):
     try:
@@ -54,7 +56,7 @@ def lambda_handler(event, context):
             #Post Exam
             (postMethod, examPath): lambda: saveExam(json.loads(event["body"])),
             #Get Exam
-            (getMethod, examPath): lambda: getExam(event["queryStringParameters"])
+            (getMethod, examPath): lambda: getExam(event["queryStringParameters"]),
         }
     
         # Get the function from the dictionary and call it
@@ -64,4 +66,3 @@ def lambda_handler(event, context):
     except Exception as e:
         logger.exception("An error occurred: %s", e)
         return buildResponse(500, {"Message": "Internal server error: " + str(e)})
-

@@ -32,20 +32,33 @@ def getQuestions(parameter):
         return buildResponse(500, {"Message": "Internal server error: " + str(e)})
 
 def saveQuestions(requestBody):
+    print(len(requestBody["questions"]))
     try:
         name = requestBody["username"]
         topic = requestBody["topic"]
         description = requestBody["description"]
-        questions = requestBody["questions"].split("\n") #Split the question by line
         
-        for question in questions:
-            questionBody = {
+        if requestBody["questions"]:
+            #Split the question by line
+            questions = requestBody["questions"].split("\n")
+            #Send each question to saveQuestion
+            for question in questions:
+                questionBody = {
+                    "username": name,
+                    "topic": topic,
+                    "description": description,
+                    "questions": question
+                }
+                saveQuestion(questionBody)
+        else:
+            print("This line will print")
+            body = {
                 "username": name,
                 "topic": topic,
-                "description": description,
-                "questions": question
+                "description": description
             }
-            saveQuestion(questionBody)
+            saveQuestion(body)
+            
         
         return buildResponse(200, {"Message": "Questions added successfully"})
     except Exception as e:

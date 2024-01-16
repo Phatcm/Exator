@@ -18,7 +18,9 @@ resource "aws_api_gateway_deployment" "prod" {
                 file("modules/api_gateway/resource_questions.tf"), 
                 file("modules/api_gateway/resource_topic.tf"), 
                 file("modules/api_gateway/resource_topics.tf"),
-                file("modules/api_gateway/resource_exam.tf")
+                file("modules/api_gateway/resource_exam.tf"),
+                file("modules/api_gateway/resource_history_attempts.tf"),
+                file("modules/api_gateway/resource_history_questions.tf"),
             ])
         )
     }
@@ -63,7 +65,19 @@ resource "aws_api_gateway_deployment" "prod" {
         aws_api_gateway_integration.post_exam_integration,
         aws_api_gateway_integration.options_exam,
         aws_api_gateway_method_response.options_exam,
-        aws_api_gateway_integration_response.options_exam,   
+        aws_api_gateway_integration_response.options_exam,
+
+        #history_attempts
+        aws_api_gateway_integration.get_history_attempts_integration,
+        aws_api_gateway_integration.options_history_attempts,
+        aws_api_gateway_method_response.options_history_attempts,
+        aws_api_gateway_integration_response.options_history_attempts,
+
+        #history_questions
+        aws_api_gateway_integration.get_history_questions_integration,
+        aws_api_gateway_integration.options_history_questions,
+        aws_api_gateway_method_response.options_history_questions,
+        aws_api_gateway_integration_response.options_history_questions,
     ]
 }
 
