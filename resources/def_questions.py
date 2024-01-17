@@ -32,20 +32,32 @@ def getQuestions(parameter):
         return buildResponse(500, {"Message": "Internal server error: " + str(e)})
 
 def saveQuestions(requestBody):
+    print(len(requestBody["questions"]))
     try:
         name = requestBody["username"]
         topic = requestBody["topic"]
         description = requestBody["description"]
-        questions = requestBody["questions"].split("\n") #Split the question by line
         
-        for question in questions:
-            questionBody = {
+        if requestBody["questions"]:
+            #Split the question by line
+            questions = requestBody["questions"].split("\n")
+            #Send each question to saveQuestion
+            for question in questions:
+                questionBody = {
+                    "username": name,
+                    "topic": topic,
+                    "description": description,
+                    "questions": question
+                }
+                saveQuestion(questionBody)
+        else:
+            body = {
                 "username": name,
                 "topic": topic,
-                "description": description,
-                "questions": question
+                "description": description
             }
-            saveQuestion(questionBody)
+            saveQuestion(body)
+            
         
         return buildResponse(200, {"Message": "Questions added successfully"})
     except Exception as e:
@@ -58,23 +70,34 @@ def modifyQuestions(requestBody):
         name = requestBody["username"]
         topic = requestBody["topic"]
         description = requestBody["description"]
-        questions = requestBody["questions"].split("\n") #Split the question by line
         
-        question_list = []
-        for question in questions:
-            # Parse the new question
-            new_question = parse_question(question)
-            question_list.append(new_question)
-        
-        #Update the item to dynamodb
-        response = questions_table.put_item(
-            Item={
-                "username": name,
-                "topic": topic,
-                "description": description,
-                "questions": question_list
-            }
-        )
+        if requestBody["questions"]:
+            questions = requestBody["questions"].split("\n") #Split the question by line
+            question_list = []
+            for question in questions:
+                # Parse the new question
+                new_question = parse_question(question)
+                question_list.append(new_question)
+            
+            #Update the item to dynamodb
+            response = questions_table.put_item(
+                Item={
+                    "username": name,
+                    "topic": topic,
+                    "description": description,
+                    "questions": question_list
+                }
+            )
+        else:
+            #Update the item to dynamodb without questions
+            response = questions_table.put_item(
+                Item={
+                    "username": name,
+                    "topic": topic,
+                    "description": description,
+                    "questions": []
+                }
+            )
         
         body = {
             "Operation": "POST",

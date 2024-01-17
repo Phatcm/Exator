@@ -41,6 +41,14 @@ module "attempts-db" {
     range_key = "attempt_id"
 }
 
+# Module for creating a DynamoDB table for favorite
+module "favorite-db" {
+    source = "./modules/dynamodb"
+    table_name = "favorite-db"
+    hash_key = "username"
+    range_key = "topic"
+}
+
 # Module for creating an S3 bucket for results
 module "results-db" {
     source = "./modules/s3"
