@@ -7,7 +7,7 @@ export default function Card({ question, answers, explain }) {
   const getRightAnswer = (answers) => {
     if (answers.length > 0) {
       let rightAnswer = answers.filter((answer) => answer[0] === "*");
-      return rightAnswer[0].slice(1);
+      if (rightAnswer[0]) return rightAnswer[0].slice(1);
     }
     return "";
   };
@@ -24,7 +24,7 @@ export default function Card({ question, answers, explain }) {
             opacity-0 z-50 invisible group-hover:opacity-100 group-hover:visible 
             inline-flex p-4 bg-black text-[#eff7f9] rounded-xl absolute border border-gray-400 right-[0px] top-full transition-all`}
         >
-          {explain && explain !== "NULL"
+          {explain && explain !== "undefined"
             ? explain
             : "this question don't have a explain."}
           <IoTriangle className="absolute top-0 right-[20px] translate-y-[-80%] text-black "></IoTriangle>

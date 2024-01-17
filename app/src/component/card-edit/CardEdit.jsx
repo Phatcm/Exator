@@ -8,11 +8,11 @@ export default function CardEdit({
   deleteFunction,
   updateCards,
   explain,
+  titleError,
 }) {
   const textareaQuestionRef = useRef(null);
   const textareaAnswerRef = useRef(null);
   const textareaExplainRef = useRef(null);
-  console.log(explain);
   const [currentQuestionValue, setCurrentQuestionValue] = useState(question);
   const [currentAnswerValue, setCurrentAnswerValue] = useState(() => {
     const newAnswers = answers.join("\n");
@@ -22,7 +22,6 @@ export default function CardEdit({
   const [isQuestionFocused, setIsQuestionFocused] = useState(false);
   const [isAnswerFocused, setIsAnswerFocused] = useState(false);
   const [isExplainFocused, setIsExplainFocused] = useState(false);
-
   useEffect(() => {
     autoExpandQuestionArea();
     autoExpandAnswerArea();
@@ -74,13 +73,16 @@ export default function CardEdit({
       <div className="bg-[#eff7f9] p-4 mt-1 flex">
         <div className="border-r pr-4 border-black w-[40%]">
           <div
-            className={`w-full h-full  transition-all relative 
-                after:content-[''] after:w-full after:absolute after:left-0 after:bottom-0 after:transition-all
-              ${
-                isQuestionFocused
-                  ? "after:bg-[#51bddb] after:h-1"
-                  : "after:bg-gray-500 after:h-[2px]"
-              }`}
+            className={`
+            w-full h-full  transition-all relative 
+            after:content-[''] after:w-full after:absolute after:left-0 after:bottom-0 after:transition-all
+            ${
+              isQuestionFocused
+                ? "after:bg-[#51bddb] after:h-1"
+                : "after:bg-gray-500 after:h-[2px]"
+            }
+            ${titleError && "after:bg-red-400 after:h-1"} 
+            `}
           >
             <textarea
               ref={textareaQuestionRef}

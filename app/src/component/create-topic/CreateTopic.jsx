@@ -19,8 +19,13 @@ export default function CreateTopic({
   const [titleValue, setTitleValue] = useState("");
   const [descriptionValue, setdescriptionValue] = useState("");
   const [textValue, setTextValue] = useState("");
+  const [titleError, setTitleError] = useState(false);
 
   const createOnClick = async () => {
+    if (titleValue.trim() === "") {
+      setTitleError(true);
+      return;
+    }
     setLoading(true);
     const url =
       "https://y6lgr4ka12.execute-api.ap-northeast-1.amazonaws.com/prod/questions";
@@ -30,7 +35,6 @@ export default function CreateTopic({
       description: descriptionValue.trim(),
       questions: textValue,
     };
-    console.log(body);
     const response = await axios.post(url, body);
     if (response.status === 200) {
       setShowSuccessed(true);
@@ -66,15 +70,26 @@ export default function CreateTopic({
             <div className="flex gap-4 h-full mt-4">
               <div className="flex-1 flex flex-col">
                 <div
-                  className={`w-full py-1 px-4 bg-white rounded-xl border-2 border-[#94b2ba] relative overflow-hidden
-            after:content-[''] after:h-1 after:absolute after:w-full after:bg-[#94b2ba] after:left-0 after:bottom-0 after:transition-all
-            ${!titleFocus ? "after:opacity-0" : "after:opacity-100"}`}
+                  className={`
+                  ${
+                    titleError
+                      ? "border-red-600 border-2"
+                      : "border-[#94b2ba] border-2"
+                  }
+                  w-full py-1 px-4 bg-white rounded-xl  border-[#94b2ba] relative overflow-hidden
+                  after:content-[''] after:h-1 after:absolute after:w-full after:bg-[#94b2ba] after:left-0 after:bottom-0 after:transition-all
+                  ${!titleFocus ? "after:opacity-0" : "after:opacity-100"}`}
                 >
-                  <p className="text-[12px]">Title</p>
+                  <p className={` ${titleError && "text-red-600"} text-[12px]`}>
+                    Title
+                  </p>
                   <input
                     className="w-full text-[18px] outline-none bg-white"
                     type="text"
-                    onChange={(e) => setTitleValue(e.target.value)}
+                    onChange={(e) => {
+                      setTitleValue(e.target.value);
+                      if (titleError === true) setTitleError(false);
+                    }}
                     onFocus={() => setTitleFocus(true)}
                     onBlur={() => setTitleFocus(false)}
                     placeholder="Enter a title, like 'Biology'"
@@ -109,7 +124,9 @@ export default function CreateTopic({
                   onChange={(e) => setTextValue(e.target.value)}
                   onFocus={() => setTextFocus(true)}
                   onBlur={() => setTextFocus(false)}
-                  placeholder="Add text..."
+                  placeholder="Question-Answer1-Answer2-*RightAnswer-Answer3|Explan
+                  Question2-Answer1-Answer2-*RightAnswer-Answer3|Explan
+                  ..."
                 />
                 <div className="w-full mt-2 bg-white border-2 border-[#94b2ba] flex justify-center py-1 rounded-xl mb-1 text-black items-center cursor-pointer hover:text-white hover:bg-[#94b2ba] transition-all">
                   <PiUploadSimple className="text-[20px] mr-2"></PiUploadSimple>

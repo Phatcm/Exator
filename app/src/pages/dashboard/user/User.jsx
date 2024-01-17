@@ -74,7 +74,7 @@ export default function User() {
             </div>
           </div>
         ) : (
-          <Loading></Loading>
+          <Loading size={"xl"}></Loading>
         )}
       </div>
     </div>

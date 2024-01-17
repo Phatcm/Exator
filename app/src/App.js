@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import AdminPage from "./pages/adminstration/AdminPage";
 import TestPage from "./pages/test/TestPage";
-import HistoryPage from "./pages/history/HistoryPage";
 import DashBoardPage from "./pages/dashboard/DashBoardPage";
 import NavigationMenu from "./component/navigation-menu/NavigationMenu";
 import Header from "./component/header/Header";
@@ -13,6 +12,8 @@ import MyTheme from "./pages/my-library/my-theme/MyTheme";
 import { Provider } from "react-redux";
 import store from "./redux/store";
 import Exam from "./pages/test/take-exam/Exam";
+import History from "./pages/test/history/History";
+import Favorite from "./pages/favorite/Favorite";
 
 function App() {
   return (
@@ -29,12 +30,14 @@ function App() {
               <Route path="/dashboard" element={<DashBoardPage />} />
               <Route path="/test/maketest" element={<TestPage />} />
               <Route path="/test/exam" element={<Exam />} />
-              <Route path="/test/history" element={<HistoryPage />} />
+              <Route path="/test/history" element={<History />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/mylibrary" element={<MyLibrary />} />
               <Route path="/dashboard/:user" element={<User />} />
               <Route path="/dashboard/:user/:theme" element={<Theme />} />
               <Route path="/mylibrary/:theme" element={<MyTheme />} />
+              <Route path="/favorite" element={<Favorite />} />
+
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>

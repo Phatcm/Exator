@@ -5,11 +5,22 @@ export default function Question({
   question,
   answersSelection,
   setAnswersSelection,
+  isReviewMode,
 }) {
+  const [rightAnswer, setRightAnswer] = useState();
   const [editedQuestion, setEditedQuestion] = useState(question);
   useEffect(() => {
     const edit = [...question];
-    edit[1] = shuffle(edit[1].map((item) => item.replace("*", "")));
+    console.log(edit);
+    edit[1] = shuffle(
+      edit[1].map((item) => {
+        if (item.includes("*")) {
+          const newItem = item.replace("*", "");
+          setRightAnswer(newItem);
+          return newItem;
+        } else return item;
+      })
+    );
 
     setEditedQuestion(edit);
   }, []);
@@ -38,10 +49,22 @@ export default function Question({
       </p>
       <div className="flex flex-col ">
         {editedQuestion[1].map((select, key) => (
-          <div key={key} className="mt-2 pl-4">
+          <div
+            key={key}
+            className={`mt-2 pl-4 
+              ${isReviewMode && rightAnswer === select ? "text-green-500" : ""}
+              ${
+                isReviewMode &&
+                rightAnswer !== select &&
+                answersSelection[index] === select
+                  ? "text-red-600"
+                  : ""
+              }
+            `}
+          >
             <input
               type="radio"
-              className="w-[16px] h-[16px]"
+              className={`w-[16px] h-[16px] `}
               name={index}
               id={index + "-" + select}
               value={select}
@@ -50,11 +73,20 @@ export default function Question({
                 newArray[index] = e.target.value;
                 setAnswersSelection(newArray);
               }}
+              disabled={isReviewMode}
             />
-             <label htmlFor={index + "-" + select}> {select} </label>
+             
+            <label className="" htmlFor={index + "-" + select}>
+              {" "}
+              {select}{" "}
+            </label>
           </div>
         ))}
       </div>
+
+      {isReviewMode && (
+        <p className="mt-4 text-yellow-700">Explain: {question[2]}</p>
+      )}
     </div>
   );
 }
