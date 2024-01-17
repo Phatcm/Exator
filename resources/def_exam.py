@@ -3,6 +3,8 @@ import logging
 import random
 import uuid
 import boto3
+from datetime import datetime, timedelta
+import time
 from def_buildresponse import buildResponse
 from def_questions import getQuestions
 
@@ -49,7 +51,8 @@ def getExam(parameter):
                 "topic": topic,
                 "questions": questions,
                 "score": "NULL",
-                "submit_time": "NULL"
+                "submit_time": "NULL",
+                "complete_time": "NULL"
             }
         )
         
@@ -71,7 +74,12 @@ def saveExam(requestBody):
         username = requestBody["username"]
         attempt_id = requestBody["attemptId"]
         answers = requestBody["answers"]
-        submit_time = requestBody["submitTime"]
+        complete_time = requestBody["completeTime"]
+        
+        # Get current time in GMT+7
+        now_utc = datetime.utcnow()
+        submit_time = now_utc + timedelta(hours=7)
+        submit_time = submit_time.strftime("%Y-%m-%d %H:%M")
         
         #Get questions list from attempt-db to compare with anwsers list from FE
         response = attempts_table.get_item(
@@ -95,10 +103,11 @@ def saveExam(requestBody):
                 "username": username,
                 "attempt_id": attempt_id
             },
-            UpdateExpression="set score=:s, submit_time=:t",
+            UpdateExpression="set score=:s, submit_time=:t, complete_time=:c",
             ExpressionAttributeValues={
                 ":s": score,
-                ":t": submit_time
+                ":t": submit_time,
+                ":c": complete_time
             },
             ReturnValues="UPDATED_NEW"
         )

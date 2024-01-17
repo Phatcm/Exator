@@ -51,7 +51,6 @@ def saveQuestions(requestBody):
                 }
                 saveQuestion(questionBody)
         else:
-            print("This line will print")
             body = {
                 "username": name,
                 "topic": topic,
@@ -71,23 +70,34 @@ def modifyQuestions(requestBody):
         name = requestBody["username"]
         topic = requestBody["topic"]
         description = requestBody["description"]
-        questions = requestBody["questions"].split("\n") #Split the question by line
         
-        question_list = []
-        for question in questions:
-            # Parse the new question
-            new_question = parse_question(question)
-            question_list.append(new_question)
-        
-        #Update the item to dynamodb
-        response = questions_table.put_item(
-            Item={
-                "username": name,
-                "topic": topic,
-                "description": description,
-                "questions": question_list
-            }
-        )
+        if requestBody["questions"]:
+            questions = requestBody["questions"].split("\n") #Split the question by line
+            question_list = []
+            for question in questions:
+                # Parse the new question
+                new_question = parse_question(question)
+                question_list.append(new_question)
+            
+            #Update the item to dynamodb
+            response = questions_table.put_item(
+                Item={
+                    "username": name,
+                    "topic": topic,
+                    "description": description,
+                    "questions": question_list
+                }
+            )
+        else:
+            #Update the item to dynamodb without questions
+            response = questions_table.put_item(
+                Item={
+                    "username": name,
+                    "topic": topic,
+                    "description": description,
+                    "questions": []
+                }
+            )
         
         body = {
             "Operation": "POST",

@@ -1,30 +1,38 @@
 import json
 import logging
-import csv
-import base64
-from io import StringIO
 
+#Functions
 from def_buildresponse import buildResponse
 from def_questions import getQuestions, saveQuestions, modifyQuestions
 from def_question import getQuestion, saveQuestion, modifyQuestion, deleteQuestion
 from def_topics import getTopics
 from def_topic import deleteTopic
 from def_exam import saveExam, getExam
+from def_history import getHistoryAttempts, getHistoryQuestions
+from def_favorite import saveFavorite, getFavorite, deleteFavorite
 
+#Logger
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
+#Method
 getMethod = "GET"
 postMethod = "POST"
 patchMethod = "PATCH"
 deleteMethod = "DELETE"
+
+#Path
 healthPath = "/health"
 questionPath = "/question"
 questionsPath = "/questions"
 topicPath = "/topic"
 topicsPath = "/topics"
 examPath = "/exam"
+historyAttemptsPath = "/history/attempts"
+historyQuestionsPath = "/history/questions"
+favoritePath = "/favorite"
 
+#Lambda Handler
 def lambda_handler(event, context):
     try:
         print(event)
@@ -57,10 +65,20 @@ def lambda_handler(event, context):
             (postMethod, examPath): lambda: saveExam(json.loads(event["body"])),
             #Get Exam
             (getMethod, examPath): lambda: getExam(event["queryStringParameters"]),
+            #Get History Attempts
+            (getMethod, historyAttemptsPath): lambda: getHistoryAttempts(event["queryStringParameters"]),
+            #Get History Questions
+            (getMethod, historyQuestionsPath): lambda: getHistoryQuestions(event["queryStringParameters"]),
+            #Post favorite
+            (postMethod, favoritePath): lambda: saveFavorite(event["queryStringParameters"]),
+            #Get favorite
+            (getMethod, favoritePath): lambda: getFavorite(event["queryStringParameters"]),
+            #Delete favorite
+            (deleteMethod, favoritePath): lambda: deleteFavorite(event["queryStringParameters"])
         }
     
         # Get the function from the dictionary and call it
-        response = func_dict.get((httpMethod, path), lambda: buildResponse(500, {"Message": "Internal server error!: " + str(e)}))()
+        response = func_dict.get((httpMethod, path), lambda: buildResponse(500, {"Message": "Internal server error!"}))()
         return response
         
     except Exception as e:

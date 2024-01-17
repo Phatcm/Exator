@@ -21,6 +21,7 @@ resource "aws_api_gateway_deployment" "prod" {
                 file("modules/api_gateway/resource_exam.tf"),
                 file("modules/api_gateway/resource_history_attempts.tf"),
                 file("modules/api_gateway/resource_history_questions.tf"),
+                file("modules/api_gateway/resource_favorite.tf"),
             ])
         )
     }
@@ -78,6 +79,14 @@ resource "aws_api_gateway_deployment" "prod" {
         aws_api_gateway_integration.options_history_questions,
         aws_api_gateway_method_response.options_history_questions,
         aws_api_gateway_integration_response.options_history_questions,
+
+        #favorite
+        aws_api_gateway_integration.get_favorite_integration,
+        aws_api_gateway_integration.post_favorite_integration,
+        aws_api_gateway_integration.delete_favorite_integration,
+        aws_api_gateway_integration.options_favorite,
+        aws_api_gateway_method_response.options_favorite,
+        aws_api_gateway_integration_response.options_favorite,
     ]
 }
 

@@ -82,17 +82,19 @@ def saveQuestion(requestBody):
     
 def parse_question(question):
     
+    #Extract the explanation from the question
     if "|" in question:
         ques_explain = question.split("|")
         question = ques_explain[0]
         explain = "".join(ques_explain[1:])
-        print(explain)
     else:
         explain = "NULL"
-        
+    
+    #Split the question into question and answers
     question_parts = question.split("-")
     question_text = question_parts[0]  # Separate the question from the answers
-    answers = [answer.strip() for answer in question_parts[1:]]  # Remove leading/trailing whitespace
+    
+    answers = [answer.strip() for answer in question_parts[1:] if answer]  # Remove leading/trailing whitespace
     
     return (question_text, answers, explain)
 
