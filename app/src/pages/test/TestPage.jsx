@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaChevronRight } from "react-icons/fa6";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FaChevronDown } from "react-icons/fa";
@@ -14,28 +14,60 @@ export default function TestPage() {
   const [topicValue, setTopicValue] = useState("");
   const [number, setNumber] = useState(40);
   const [time, setTime] = useState(60);
+  const [invalidTopic, setInvalidTopic] = useState(false);
+  const [invalidUser, setInvalidUser] = useState(false);
+  const [invalidNumber, setInvalidNumber] = useState(false);
+  const [invalidTime, setInvalidTime] = useState(false);
+  useEffect(() => {
+    setUsernameValue(searchParams.get("username"));
+    setTopicValue(searchParams.get("topic"));
+  }, []);
 
   const createTest = async () => {
-    const url = `https://y6lgr4ka12.execute-api.ap-northeast-1.amazonaws.com/prod/exam`;
-    const params = {
-      owner: "nice",
-      username: "nice",
-      topic: "t1",
-      number: 60,
-    };
-    const response = await axios.get(url, { params: params });
-    if (response.status === 200) {
-      const data = response.data;
-      const payload = {
-        questions: data[Object.keys(data)[0]],
-        time: 60,
-        user: "nice",
-        director: "nice",
-        topic: "t1",
-        id: Object.keys(data)[0],
+    let active = true;
+
+    if (usernameValue === null || usernameValue === "") {
+      setInvalidUser(true);
+      active = false;
+    }
+
+    if (topicValue === null || topicValue === "") {
+      setInvalidTopic(true);
+      active = false;
+    }
+
+    if (Number(number) < 1 || number === "") {
+      setInvalidNumber(true);
+      active = false;
+    }
+
+    if (Number(time) < 1 || time === "") {
+      setInvalidTime(true);
+      active = false;
+    }
+    if (active === true) {
+      const url = `https://y6lgr4ka12.execute-api.ap-northeast-1.amazonaws.com/prod/exam`;
+      const params = {
+        owner: usernameValue,
+        username: "nice",
+        topic: topicValue,
+        number: number,
       };
-      dispatch(setExam(payload));
-      navigate("/test/exam");
+      const response = await axios.get(url, { params: params });
+      if (response.status === 200) {
+        const data = response.data;
+        const payload = {
+          questions: data[Object.keys(data)[0]],
+          time: time,
+          user: "nice",
+          director: usernameValue,
+          topic: topicValue,
+          id: Object.keys(data)[0],
+        };
+
+        dispatch(setExam(payload));
+        navigate("/test/exam");
+      }
     }
   };
 
@@ -52,7 +84,11 @@ export default function TestPage() {
         <div className="mt-8 h-full">
           <div className="flex gap-4 h-full">
             <div className="w-[35%] flex flex-col p-4 rounded-lg bg-[#eff7f9]">
-              <div className="flex rounded-xl border border-black mt-4 p-4 pb-2 relative">
+              <div
+                className={`${
+                  invalidUser ? "border-red-500 text-red-500" : "border-black"
+                } flex rounded-xl border-2  mt-4 p-4 pb-2 relative`}
+              >
                 <div className="flex-1">
                   <p className="bg-[#eff7f9] absolute top-[-16px] p-1 font-semibold">
                     Username
@@ -61,14 +97,22 @@ export default function TestPage() {
                     className="w-full h-full text-[18px] outline-none bg-[#eff7f9]"
                     type="text"
                     placeholder="Enter a username..."
-                    onChange={(e) => setUsernameValue(e.target.value)}
+                    onChange={(e) => {
+                      setUsernameValue(e.target.value);
+                      if (invalidUser) setInvalidUser(false);
+                    }}
+                    defaultValue={usernameValue}
                   />
                 </div>
                 <div className="p-2">
                   <FaChevronDown></FaChevronDown>
                 </div>
               </div>
-              <div className="flex rounded-xl border border-black p-4 pb-2 relative mt-4">
+              <div
+                className={`${
+                  invalidTopic ? "border-red-500 text-red-500" : "border-black"
+                } flex rounded-xl border-2  p-4 pb-2 relative mt-4`}
+              >
                 <div className="flex-1">
                   <p className="bg-[#eff7f9] absolute top-[-16px] p-1 font-semibold">
                     Topic
@@ -77,7 +121,11 @@ export default function TestPage() {
                     className="w-full h-full text-[18px] outline-none bg-[#eff7f9]"
                     type="text"
                     placeholder="Enter a topic ..."
-                    onChange={(e) => setTopicValue(e.target.value)}
+                    onChange={(e) => {
+                      setTopicValue(e.target.value);
+                      if (invalidTopic) setInvalidTopic(false);
+                    }}
+                    defaultValue={topicValue}
                   />
                 </div>
                 <div className="p-2">
@@ -86,21 +134,45 @@ export default function TestPage() {
               </div>
               <div className="flex mt-4 gap-4 items-center justify-between">
                 <p className="">Timing (minutes): </p>
-                <div className="p-2 border-2 border-black rounded-xl w-[80px]">
+                <div
+                  className={`${
+                    invalidTime ? "border-red-500 text-red-500" : "border-black"
+                  }
+                  p-2 border-2 rounded-xl w-[80px]`}
+                >
                   <input
                     type="number"
                     className="w-full h-full text-[18px] outline-none bg-[#eff7f9]"
                     defaultValue={60}
+                    onChange={(e) => {
+                      setTime(e.target.value);
+                      if (invalidTime) setInvalidTime(false);
+                    }}
+                    min={1}
+                    max={999}
                   />
                 </div>
               </div>
               <div className="flex mt-4 gap-4 items-center justify-between">
                 <p className="">Number of questions: </p>
-                <div className="p-2 border-2 border-black rounded-xl w-[80px]">
+                <div
+                  className={`${
+                    invalidNumber
+                      ? "border-red-500 text-red-500"
+                      : "border-black"
+                  }
+                  p-2 border-2 rounded-xl w-[80px]`}
+                >
                   <input
                     type="number"
                     className="w-full h-full text-[18px] outline-none bg-[#eff7f9]"
                     defaultValue={40}
+                    onChange={(e) => {
+                      setNumber(e.target.value);
+                      if (invalidNumber) setInvalidNumber(false);
+                    }}
+                    min={1}
+                    max={999}
                   />
                 </div>
               </div>

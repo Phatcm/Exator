@@ -67,7 +67,7 @@ export default function MyLibrary() {
               </div>
             </div>
           ) : (
-            <Loading></Loading>
+            <Loading size={"xl"}></Loading>
           )}
         </div>
         {isCreateTopic && (

@@ -25,7 +25,7 @@ export default function MyTheme() {
   const [topic, setTopic] = useState(null);
   const [loading, setLoading] = useState(false);
   const [notFound, setNotFound] = useState(false);
-
+  const [validateCard, setValidateCard] = useState([]);
   useEffect(() => {
     const getQuestions = async () => {
       setLoading(true);
@@ -33,7 +33,6 @@ export default function MyTheme() {
       const response = await axios.get(url);
 
       const data = response.data;
-      console.log(response);
       if (data[0]) {
         setTopic(data[0]);
         let ncards = [];
@@ -44,6 +43,7 @@ export default function MyTheme() {
           };
           ncards.push(card);
         });
+        console.log(ncards);
         setCards(ncards);
         setEditCards(ncards);
       } else {
@@ -69,22 +69,36 @@ export default function MyTheme() {
     setNewCards(ncards);
   };
   const saveClick = async () => {
-    const url =
-      "https://y6lgr4ka12.execute-api.ap-northeast-1.amazonaws.com/prod/questions";
+    let validArray = [];
+    editCards.forEach((card) => {
+      if (card.card[0] === "") {
+        validArray.push(card.index);
+      }
+    });
+    newCards.forEach((card) => {
+      if (card.card[0] === "") {
+        validArray.push(card.index);
+      }
+    });
 
-    let editArray = [...editCards];
-    let newArray = [...newCards];
-    let array = editArray.concat(newArray);
-
-    const body = {
-      username: "nice",
-      topic: topic.topic,
-      description: topic.description,
-      questions: stringFormatQuestions(array),
-    };
-    const response = await axios.patch(url, body);
-    if (response.status === 200) {
-      navigate("/mylibrary");
+    if (validArray.length > 0) {
+      setValidateCard(validArray);
+    } else {
+      const url =
+        "https://y6lgr4ka12.execute-api.ap-northeast-1.amazonaws.com/prod/questions";
+      let editArray = [...editCards];
+      let newArray = [...newCards];
+      let array = editArray.concat(newArray);
+      const body = {
+        username: "nice",
+        topic: topic.topic,
+        description: topic.description,
+        questions: stringFormatQuestions(array),
+      };
+      const response = await axios.patch(url, body);
+      if (response.status === 200) {
+        navigate("/mylibrary");
+      }
     }
   };
   const stringFormatQuestions = (array) => {
@@ -144,7 +158,10 @@ export default function MyTheme() {
     });
     setEditCards(ncards);
   };
-
+  const testClick = () => {
+    const link = `/test/maketest?isMine=1&username=nice&topic=${theme}`;
+    navigate(link);
+  };
   return !notFound ? (
     <div className="h-full flex flex-col">
       <div className="w-full flex flex-col flex-1 bg-white rounded-xl p-4 pt-0 mt-4 relative overflow-y-auto">
@@ -199,6 +216,11 @@ export default function MyTheme() {
                   name={item.name}
                   Icon={item.Icon}
                   isSetting={isSetting}
+                  clickFunction={() => {
+                    if (item.name === "Test") {
+                      testClick();
+                    }
+                  }}
                 ></FunctionTheme>
               ))}
             </div>
@@ -237,6 +259,7 @@ export default function MyTheme() {
                       index={item.index}
                       deleteFunction={() => deleteNewCard(item.index)}
                       updateCards={handlerEditingNewCard}
+                      titleError={validateCard.includes(item.index)}
                     ></CardEdit>
                   ))}
                 </div>
@@ -261,6 +284,7 @@ export default function MyTheme() {
                         explain={item.card[2]}
                         deleteFunction={() => deleteEditCard(item.index)}
                         updateCards={handlerEditingEditCard}
+                        titleError={validateCard.includes(item.index)}
                       ></CardEdit>
                     ))}
               </div>
@@ -270,7 +294,7 @@ export default function MyTheme() {
             </div>
           </div>
         ) : (
-          <Loading></Loading>
+          <Loading size={"xl"}></Loading>
         )}
       </div>
     </div>

@@ -36,9 +36,9 @@ export const items = [
     Icon: FaRegStar,
     link: "/favorite",
   },
-  {
-    name: "Adminstration",
-    Icon: MdOutlineAdminPanelSettings,
-    link: "/admin",
-  },
+  // {
+  //   name: "Adminstration",
+  //   Icon: MdOutlineAdminPanelSettings,
+  //   link: "/admin",
+  // },
 ];

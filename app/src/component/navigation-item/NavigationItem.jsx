@@ -75,12 +75,14 @@ export default function NavigationItem({
       <div
         className={`
         ${isChildOpen ? "" : "hidden "}
-        pl-12 transition-all duration-1000`}
+        pl-12 overflow-hidden`}
       >
         {child.map((el, id) => (
           <div
             key={id}
-            className="group mt-4 flex items-center gap-2 cursor-pointer "
+            className={`
+             group mt-4 flex items-center gap-2 cursor-pointer text-nowrap transition-all
+            `}
             onClick={() => {
               navigate(`${link + el.link}`);
               setTargetChild(el.link);

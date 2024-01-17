@@ -61,7 +61,8 @@ export default function Notification({ type, isShow, name }) {
   return (
     <Fragment>
       {array.map((item, key) => {
-        if (type === item.type) return item.component;
+        if (type === item.type)
+          return <Fragment key={key}>{item.component}</Fragment>;
       })}
     </Fragment>
   );

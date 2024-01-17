@@ -18,7 +18,7 @@ export default function NavigationMenu() {
     setTargetItem("/" + route[1]);
 
     setTargetChild("/" + route[2]);
-  }, []);
+  }, [location.pathname]);
 
   useEffect(() => {
     function handleClickOutside(event) {

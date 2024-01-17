@@ -1,10 +1,9 @@
 import React from "react";
 
 export default function AcceptBtn({ name, clickFunction }) {
-  let btn = <div>ACD</div>;
+  let btn = <div></div>;
   switch (name) {
     case "save":
-      console.log(123);
       btn = (
         <div
           className={`group py-1 px-4 border-2 border-[#15803d] hover:bg-[#16a34a] transition-all rounded-xl cursor-pointer`}
