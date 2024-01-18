@@ -1,140 +1,86 @@
-import boto3
 import json
 import logging
-from custom_encoder import CustomEncoder
+
+#Functions
+from def_buildresponse import buildResponse
+from def_questions import getQuestions, saveQuestions, modifyQuestions
+from def_question import getQuestion, saveQuestion, modifyQuestion, deleteQuestion
+from def_topics import getTopics
+from def_topic import deleteTopic
+from def_exam import saveExam, getExam
+from def_history import getHistoryAttempts, getHistoryQuestions
+from def_favorite import saveFavorite, getFavorite, deleteFavorite
+
+#Logger
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-dynamodbTableName = "question-inventory"
-dynamodb = boto3.resource("dynamodb")
-table = dynamodb.Table(dynamodbTableName)
-
+#Method
 getMethod = "GET"
 postMethod = "POST"
 patchMethod = "PATCH"
 deleteMethod = "DELETE"
+
+#Path
 healthPath = "/health"
 questionPath = "/question"
 questionsPath = "/questions"
+topicPath = "/topic"
+topicsPath = "/topics"
+examPath = "/exam"
+historyAttemptsPath = "/history/attempts"
+historyQuestionsPath = "/history/questions"
+favoritePath = "/favorite"
 
-
+#Lambda Handler
 def lambda_handler(event, context):
-    logger.info(event)
-    httpMethod = event["httpMethod"]
-    path = event["path"]
-    if httpMethod == getMethod and path == healthPath:
-        response = buildResponse(200)
-    elif httpMethod == getMethod and path == questionsPath:
-        response = getQuestions()
-    elif httpMethod == postMethod and path == questionsPath:
-        #loop to save all questions
-        response = saveQuestion()
-    elif httpMethod == getMethod and path == questionPath:
-        response = getQuestion(event["queryStringParameters"]["questionId"])
-    elif httpMethod == postMethod and path == questionPath:
-        response = saveQuestion(json.loads(event["body"]))
-    elif httpMethod == patchMethod and path == questionPath:
-        requestBody = json.loads(event["body"])
-        response = modifyQuestion(requestBody["questionId"], requestBody["updateKey"], requestBody["updateValue"])
-    elif httpMethod == deleteMethod and path == questionPath:
-        requestBody = json.loads(event["body"])
-        response = deleteQuestion(requestBody["questionId"])
-    else:
-        response = buildResponse(404, "Not Found")
-    return response
-
-def getQuestion(questionId):
     try:
-        response = table.get_item(
-            Key={
-                "questionId": questionId
-            }
-        )
-        if "Item" in response:
-            return buildResponse(200, response["Item"])
-        else:
-            return buildResponse(404, {"Message": "QuestionId: {0}s not found".format(questionId)})
-    except:
-        logger.exception("Do your custom error handling here. I am just gonna log it our here!!")
-
-def getQuestions():
-    try:
-        response = table.scan()
-        result = response["Items"]
-
-        while "LastEvaluateKey" in response:
-            response = table.scan(ExclusiveStartKey=response["LastEvaluatedKey"])
-            result.extend(response["Items"])
-
-        body = {
-            "questions": response
+        print(event)
+        httpMethod = event["httpMethod"]
+        path = event["path"]
+        
+        # Define a dictionary to map (httpMethod, path) to the corresponding function
+        func_dict = {
+            #Health Check
+            (getMethod, healthPath): lambda: buildResponse(200, "Connection is OK"),
+            #Get Questions
+            (getMethod, questionsPath): lambda: getQuestions(event["queryStringParameters"]),
+            #Save Questions
+            (postMethod, questionsPath): lambda: saveQuestions(json.loads(event["body"])),
+            #Modify Questions
+            (patchMethod, questionsPath): lambda: modifyQuestions(json.loads(event["body"])),
+            #Get Question
+            (getMethod, questionPath): lambda: getQuestion(event["queryStringParameters"]["questionId"]),
+            #Save Question
+            (postMethod, questionPath): lambda: saveQuestion(json.loads(event["body"])),
+            #Modify Question
+            (patchMethod, questionPath): lambda: modifyQuestion(json.loads(event["body"])["questionId"], json.loads(event["body"])["updateKey"], json.loads(event["body"])["updateValue"]),
+            #Delete Question
+            (deleteMethod, questionPath): lambda: deleteQuestion(json.loads(event["body"])["questionId"]),
+            #Get Topics
+            (getMethod, topicsPath): lambda: getTopics(event["queryStringParameters"]),
+            #Delete Topic
+            (deleteMethod, topicPath): lambda: deleteTopic(event["queryStringParameters"]),
+            #Post Exam
+            (postMethod, examPath): lambda: saveExam(json.loads(event["body"])),
+            #Get Exam
+            (getMethod, examPath): lambda: getExam(event["queryStringParameters"]),
+            #Get History Attempts
+            (getMethod, historyAttemptsPath): lambda: getHistoryAttempts(event["queryStringParameters"]),
+            #Get History Questions
+            (getMethod, historyQuestionsPath): lambda: getHistoryQuestions(event["queryStringParameters"]),
+            #Post favorite
+            (postMethod, favoritePath): lambda: saveFavorite(event["queryStringParameters"]),
+            #Get favorite
+            (getMethod, favoritePath): lambda: getFavorite(event["queryStringParameters"]),
+            #Delete favorite
+            (deleteMethod, favoritePath): lambda: deleteFavorite(event["queryStringParameters"])
         }
-        return buildResponse(200, body)
-    except:
-        logger.exception("Do your custom error handling here. I am just gonna log it our here!!")
-
-def saveQuestion(requestBody):
-    try:
-        table.put_item(Item=requestBody)
-        body = {
-            "Operation": "SAVE",
-            "Message": "SUCCESS",
-            "Item": requestBody
-        }
-        return buildResponse(200, body)
-    except:
-        logger.exception("Do your custom error handling here. I am just gonna log it our here!!")
-
-def modifyQuestion(questionId, updateKey, updateValue):
-    try:
-        response = table.update_item(
-            Key={
-                "questionId": questionId
-            },
-
-            UpdateExpression="set {0}s = :value".format(updateKey),
-            ExpressionAttributeValues={
-                ":value": updateValue
-            },
-            ReturnValues="UPDATED_NEW"
-        )
-        body = {
-            "Operation": "UPDATE",
-            "Message": "SUCCESS",
-            "UpdatedAttributes": response
-        }
-        return buildResponse(200, body)
-    except:
-        logger.exception("Do your custom error handling here. I am just gonna log it our here!!")
-
-def deleteQuestion(questionId):
-    try:
-        response = table.delete_item(
-            Key={
-                "questionId": questionId
-            },
-            ReturnValues="ALL_OLD"
-        )
-        body = {
-            "Operation": "DELETE",
-            "Message": "SUCCESS",
-            "deltedItem": response
-        }
-        return buildResponse(200, body)
-    except:
-        logger.exception("Do your custom error handling here. I am just gonna log it our here!!")
-
-
-def buildResponse(statusCode, body=None):
-    response = {
-        "statusCode": statusCode,
-        "headers": {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*"
-        },
-        'body': "Success ping to the server"
-    }
-
-    if body is not None:
-        response["body"] = json.dumps(body, cls=CustomEncoder)
-    return response
+    
+        # Get the function from the dictionary and call it
+        response = func_dict.get((httpMethod, path), lambda: buildResponse(500, {"Message": "Internal server error!"}))()
+        return response
+        
+    except Exception as e:
+        logger.exception("An error occurred: %s", e)
+        return buildResponse(500, {"Message": "Internal server error: " + str(e)})
