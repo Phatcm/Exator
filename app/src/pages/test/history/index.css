@@ -43,15 +43,7 @@
   position: sticky;
   top: 0;
 }
-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-th,
-td {
-  padding: 8px 15px;
-  border: 2px solid #529432;
-}
+
 th {
-  background: #abdd93;
+  background: #009879;
 }
