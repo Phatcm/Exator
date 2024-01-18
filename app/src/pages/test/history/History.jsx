@@ -2,16 +2,20 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import "./index.css";
 import { useNavigate } from "react-router-dom";
+import Loading from "../../../component/loading/Loading";
 export default function History() {
   const navigate = useNavigate();
   const [topics, setTopics] = useState([]);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const getThemes = async () => {
+      setLoading(true);
       const url = `${process.env.REACT_APP_URL}/history/attempts?username=nice`;
       const response = await axios.get(url);
 
       const data = response.data;
       setTopics(data);
+      setLoading(false);
     };
     getThemes();
     return () => {};
@@ -27,54 +31,53 @@ export default function History() {
         </div>
         <div className="bg-white h-[60px]"></div>
         <div className="flex h-[calc(100%-140px)] flex-col px-4 overflow-y-auto">
-          <table className="fixTableHead w-full relative">
-            <thead className="">
-              <tr className="text-center">
-                <th className="">Topic</th>
-                <th className="">Owner</th>
-                <th className="">Date</th>
-                <th className="">Time Complete</th>
-                <th className="">Score</th>
-                <th className="">Action</th>
-              </tr>
-            </thead>
-            <tbody className="text-center">
-              {topics.map((topic) => (
-                <tr>
-                  <td
-                    className="hover:text-[#95b3bb] cursor-pointer transition-all"
-                    onClick={() =>
-                      navigate(`/dashboard/${topic.owner}/${topic.topic}`)
-                    }
-                  >
-                    {topic.topic}
-                  </td>
-                  <td>{topic.owner}</td>
-                  <td>{topic.submit_time}</td>
-                  <td>{topic.complete_time}</td>
-                  <td>{topic.score}</td>
-                  <td>Mexico</td>
+          {!loading && (
+            <table className="fixTableHead content-table w-full relative rounded-lg ">
+              <thead className="">
+                <tr className="text-center">
+                  <th className="">Topic</th>
+                  <th className="">Owner</th>
+                  <th className="">Date</th>
+                  <th className="">Time Complete</th>
+                  <th className="">Score</th>
+                  <th className="">Action</th>
                 </tr>
-              ))}
-              {topics.map((topic) => (
-                <tr>
-                  <td
-                    className="hover:text-[#95b3bb] cursor-pointer transition-all"
-                    onClick={() =>
-                      navigate(`/dashboard/${topic.owner}/${topic.topic}`)
-                    }
-                  >
-                    {topic.topic}
-                  </td>
-                  <td>{topic.owner}</td>
-                  <td>{topic.submit_time}</td>
-                  <td>{topic.complete_time}</td>
-                  <td>{topic.score}</td>
-                  <td>Mexico</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="text-center">
+                {topics.map((topic, key) => (
+                  <tr key={key}>
+                    <td
+                      className="hover:text-[#95b3bb] cursor-pointer transition-all"
+                      onClick={() =>
+                        navigate(`/dashboard/${topic.owner}/${topic.topic}`)
+                      }
+                    >
+                      {topic.topic}
+                    </td>
+                    <td>{topic.owner}</td>
+                    <td>{topic.submit_time}</td>
+                    <td>{topic.complete_time}</td>
+                    <td>{topic.score}</td>
+                    <td>
+                      <div
+                        className="px-2 py-1 border border-green-700 inline-block rounded-xl text-green-700 bg-[#eff7f9] hover:opacity-70 cursor-pointer"
+                        onClick={() =>
+                          navigate(`/test/history/${topic.attempt_id}`)
+                        }
+                      >
+                        <p className="">Review</p>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          {loading && (
+            <div className="w-full h-[200px]">
+              <Loading size={"l"}></Loading>
+            </div>
+          )}
         </div>
       </div>
     </div>

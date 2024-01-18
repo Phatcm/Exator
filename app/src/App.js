@@ -14,6 +14,7 @@ import store from "./redux/store";
 import Exam from "./pages/test/take-exam/Exam";
 import History from "./pages/test/history/History";
 import Favorite from "./pages/favorite/Favorite";
+import ReviewHistory from "./pages/test/history/review-history/ReviewHistory";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
               <Route path="/test/maketest" element={<TestPage />} />
               <Route path="/test/exam" element={<Exam />} />
               <Route path="/test/history" element={<History />} />
+              <Route path="/test/history/:id" element={<ReviewHistory />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/mylibrary" element={<MyLibrary />} />
               <Route path="/dashboard/:user" element={<User />} />

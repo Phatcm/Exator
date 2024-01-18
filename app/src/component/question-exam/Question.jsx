@@ -11,7 +11,6 @@ export default function Question({
   const [editedQuestion, setEditedQuestion] = useState(question);
   useEffect(() => {
     const edit = [...question];
-    console.log(edit);
     edit[1] = shuffle(
       edit[1].map((item) => {
         if (item.includes("*")) {
