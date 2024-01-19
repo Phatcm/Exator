@@ -1,6 +1,9 @@
 import json
 import logging
 
+from google.oauth2 import id_token
+from google.auth.transport import requests
+
 #Functions
 from def_buildresponse import buildResponse
 from def_questions import getQuestions, saveQuestions, modifyQuestions
@@ -31,11 +34,12 @@ examPath = "/exam"
 historyAttemptsPath = "/history/attempts"
 historyQuestionsPath = "/history/questions"
 favoritePath = "/favorite"
+userPath = "/user"
+userPasswordPath = "/user/password"
 
 #Lambda Handler
 def lambda_handler(event, context):
     try:
-        print(event)
         httpMethod = event["httpMethod"]
         path = event["path"]
         
