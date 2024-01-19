@@ -60,8 +60,8 @@ module "lambda-handler" {
     source = "./modules/lambda"
     #Layer
     layer_name = "Exator-lambda-layer"
-    layer_source_dir = "lambda_layer"
-    layer_output_path = "lambda_layer_payload.zip"
+    layer_source_dir = "../lambda_layer"
+    layer_output_path = "../lambda_layer_payload.zip"
 
     #Function
     lambda_function_name = "Exator-lambda-function"
