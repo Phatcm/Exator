@@ -7,4 +7,3 @@ class CustomEncoder(json.JSONEncoder):
             return float(obj)
         return json.JSONEncoder.default(self, obj)
     
-a = 10
