@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Sign-In Test</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <div id="g_id_onload"
+         data-client_id="515048359790-0qeabh29ovkvv4n7r27l87kvov3i94u7.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse">
+    </div>
+    <div class="g_id_signin"></div>
+    <button id="signoutButton" style="display: none;">Sign Out</button>
+
+    <script>
+        function handleCredentialResponse(response) {
+            // Send the ID token to your server
+            fetch('https://y6lgr4ka12.execute-api.ap-northeast-1.amazonaws.com/prod/user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id_token: response.credential })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                document.getElementById('signoutButton').style.display = 'block';
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+
+        document.getElementById('signoutButton').addEventListener('click', function() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                console.log('User signed out.');
+                document.getElementById('signoutButton').style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

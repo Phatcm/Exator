@@ -1,3 +1,16 @@
+data "archive_file" "lambda_layer" {
+  type        = "zip"
+  source_dir  = var.layer_source_dir
+  output_path = var.layer_output_path
+}
+
+resource "aws_lambda_layer_version" "lambda_layer" {
+  filename            = data.archive_file.lambda_layer.output_path
+  layer_name          = var.layer_name
+  description         = "lambda layer for fastapi related dependencies"
+  compatible_runtimes = ["python3.9"]
+}
+
 data "archive_file" "lambda_zip" {
   type = "zip"
   output_path = var.output_path

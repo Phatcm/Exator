@@ -17,15 +17,31 @@ jobs:
       - name: Git Checkout
         uses: actions/checkout@v3
 
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Create layers
+        run: |
+          pip install --upgrade pip
+          ls # Checking the files in current dir
+          mkdir -p lambda_layer/python/ # Creating new directory for layer.
+          pip install --target ./lambda_layer/python/  google-auth
+          pip install --target ./lambda_layer/python/  google-auth-oauthlib
+          pip install --target ./lambda_layer/python/  google-auth-httplib2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.0.0
+
       - name: Configure aws credential
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
 
       - name: Terraform fmt
         id: fmt
