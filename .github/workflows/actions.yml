@@ -1,63 +1,63 @@
-name: iac deployment
 on:
   push:
     branches:
       - phat
 jobs:
   deploy:
+    name: dev-deploy
+    environment: Actions Secrets
     runs-on: ubuntu-latest
     defaults:
       run:
-        shell: bash
         working-directory: .
     steps:
-      - name: Git Checkout
-        uses: actions/checkout@v3
+    - name: Git Checkout
+      uses: actions/checkout@v3
 
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.9
-      
-      - name : Delete lambda_layer folder
-        run: rm -rf lambda_layer
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.9
+    
+    - name : Delete lambda_layer folder
+      run: rm -rf lambda_layer
 
-      - name: Create layers
-        run: |
-          pip install --upgrade pip
-          ls # Checking the files in current dir
-          mkdir -p lambda_layer/python/ # Creating new directory for layer.
-          pip install --target ./lambda_layer/python/  google-auth
-          pip install --target ./lambda_layer/python/  google-auth-oauthlib
-          pip install --target ./lambda_layer/python/  google-auth-httplib2
-          pip install --target ./lambda_layer/python/  google-api-python-client
-          pip install --target ./lambda_layer/python/  "urllib3<2"
+    - name: Create layers
+      run: |
+        pip install --upgrade pip
+        ls # Checking the files in current dir
+        mkdir -p lambda_layer/python/ # Creating new directory for layer.
+        pip install --target ./lambda_layer/python/  google-auth
+        pip install --target ./lambda_layer/python/  google-auth-oauthlib
+        pip install --target ./lambda_layer/python/  google-auth-httplib2
+        pip install --target ./lambda_layer/python/  google-api-python-client
+        pip install --target ./lambda_layer/python/  "urllib3<2"
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: 1.0.0
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.0.0
 
-      - name: Configure aws credential
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+    - name: Configure aws credential
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Terraform fmt
-        id: fmt
-        run: cd terraform && terraform fmt -check
-        continue-on-error: true
+    - name: Terraform fmt
+      id: fmt
+      run: cd terraform && terraform fmt -check
+      continue-on-error: true
 
-      - name: Terraform Init
-        id: init
-        run: cd terraform && terraform init
+    - name: Terraform Init
+      id: init
+      run: cd terraform && terraform init
 
-      - name: Terraform Validate
-        id: validate
-        run: cd terraform && terraform validate -no-color
+    - name: Terraform Validate
+      id: validate
+      run: cd terraform && terraform validate -no-color
 
-      - name: Terraform Apply
-        id: apply
-        run: cd terraform && terraform apply -auto-approve -input=false
+    - name: Terraform Apply
+      id: apply
+      run: cd terraform && terraform apply -auto-approve -input=false
