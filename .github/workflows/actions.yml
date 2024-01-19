@@ -31,7 +31,7 @@ jobs:
           pip install --target ./lambda_layer/python/  google-auth-oauthlib
           pip install --target ./lambda_layer/python/  google-auth-httplib2
           pip install --target ./lambda_layer/python/  google-api-python-client
-          pip install --target ./lambda_layer/python/  urllib3<2
+          pip install --target ./lambda_layer/python/  "urllib3<2"
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
