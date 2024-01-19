@@ -39,7 +39,6 @@ userPasswordPath = "/user/password"
 #Lambda Handler
 def lambda_handler(event, context):
     try:
-        print(event)
         httpMethod = event["httpMethod"]
         path = event["path"]
         
