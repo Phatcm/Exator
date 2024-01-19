@@ -22,6 +22,8 @@ resource "aws_api_gateway_deployment" "prod" {
                 file("modules/api_gateway/resource_history_attempts.tf"),
                 file("modules/api_gateway/resource_history_questions.tf"),
                 file("modules/api_gateway/resource_favorite.tf"),
+                file("modules/api_gateway/resource_user.tf"),
+                file("modules/api_gateway/resource_user_password.tf")
             ])
         )
     }
@@ -87,6 +89,20 @@ resource "aws_api_gateway_deployment" "prod" {
         aws_api_gateway_integration.options_favorite,
         aws_api_gateway_method_response.options_favorite,
         aws_api_gateway_integration_response.options_favorite,
+
+        #user
+        aws_api_gateway_integration.get_user_integration,
+        aws_api_gateway_integration.post_user_integration,
+        aws_api_gateway_integration.options_user,
+        aws_api_gateway_method_response.options_user,
+        aws_api_gateway_integration_response.options_user,
+
+        #user_password
+        aws_api_gateway_integration.post_password_integration,
+        aws_api_gateway_integration.patch_password_integration,
+        aws_api_gateway_integration.options_password,
+        aws_api_gateway_method_response.options_password,
+        aws_api_gateway_integration_response.options_password
     ]
 }
 
