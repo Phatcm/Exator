@@ -67,7 +67,7 @@ module "lambda-handler" {
     lambda_function_name = "Exator-lambda-function"
     lambda_role_arn = module.lambda-role.iam_role_arn
     lambda_handler = "lambda_function.lambda_handler"
-    lambda_runtime = "python3.9"
+    lambda_runtime = "python3.11"
     output_path = "../resources/lambda_function.zip"
     source_dir = "../resources/"
     filename = "../resources/lambda_function.zip"

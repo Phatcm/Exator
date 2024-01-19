@@ -8,7 +8,7 @@ resource "aws_lambda_layer_version" "lambda_layer" {
   filename            = data.archive_file.lambda_layer.output_path
   layer_name          = var.layer_name
   description         = "lambda layer for fastapi related dependencies"
-  compatible_runtimes = ["python3.9"]
+  compatible_runtimes = ["python3.11"]
 }
 
 data "archive_file" "lambda_zip" {
