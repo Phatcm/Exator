@@ -58,6 +58,10 @@ jobs:
       id: validate
       run: cd terraform && terraform validate -no-color
 
-    - name: Terraform Apply
-      id: apply
-      run: cd terraform && terraform apply -auto-approve -input=false
+    # - name: Terraform Apply
+    #   id: apply
+    #   run: cd terraform && terraform apply -auto-approve -input=false
+    
+    - name: Terraform destroy
+      id: destroy
+      run: cd terraform && terraform destroy -auto-approve -input=false
