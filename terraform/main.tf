@@ -65,7 +65,7 @@ module "lambda-handler" {
   output_path          = "../resources/lambda_function.zip"
   source_dir           = "../resources/"
   filename             = "../resources/lambda_function.zip"
-  s3_bucket_name       = module.results-db.s3_bucket_name
+  #   s3_bucket_name       = module.results-db.s3_bucket_name
   questions_table_name = module.questions-db.dynamodb_table_name
   attempts_table_name  = module.attempts-db.dynamodb_table_name
 }
