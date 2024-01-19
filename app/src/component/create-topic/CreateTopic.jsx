@@ -27,8 +27,7 @@ export default function CreateTopic({
       return;
     }
     setLoading(true);
-    const url =
-      "https://y6lgr4ka12.execute-api.ap-northeast-1.amazonaws.com/prod/questions";
+    const url = process.env.REACT_APP_URL + "/questions";
     const body = {
       username: "nice",
       topic: titleValue.trim(),
