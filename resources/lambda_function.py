@@ -33,6 +33,8 @@ examPath = "/exam"
 historyAttemptsPath = "/history/attempts"
 historyQuestionsPath = "/history/questions"
 favoritePath = "/favorite"
+userPath = "/user"
+userPasswordPath = "/user/password"
 
 #Lambda Handler
 def lambda_handler(event, context):
