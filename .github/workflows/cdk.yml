@@ -48,6 +48,7 @@ jobs:
         working-directory: ./cdk
         run: cdk bootstrap
 
+
       - name: cdk synth
         working-directory: ./cdk
         run: cdk synth
