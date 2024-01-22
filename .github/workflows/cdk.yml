@@ -48,11 +48,10 @@ jobs:
         working-directory: ./cdk
         run: cdk bootstrap
 
-
       - name: cdk synth
         working-directory: ./cdk
         run: cdk synth
 
-      - name: cdk deploy
+      - name: cdk deploy --require-approval never
         working-directory: ./cdk
         run: cdk deploy
