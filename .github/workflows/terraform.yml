@@ -3,13 +3,15 @@ on:
   push:
     branches:
       - master
-      - phat
     paths:
       - "resources/**"
       - "terraform/**"
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
     defaults:
       run:
         shell: bash
@@ -17,7 +19,6 @@ jobs:
     steps:
       - name: Git Checkout
         uses: actions/checkout@v3
-      
       - name: Configure aws credential
         uses: aws-actions/configure-aws-credentials@v1
         with:

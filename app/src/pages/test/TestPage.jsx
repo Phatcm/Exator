@@ -46,7 +46,7 @@ export default function TestPage() {
       active = false;
     }
     if (active === true) {
-      const url = `https://y6lgr4ka12.execute-api.ap-northeast-1.amazonaws.com/prod/exam`;
+      const url = `${process.env.REACT_APP_URL}/exam`;
       const params = {
         owner: usernameValue,
         username: "nice",
