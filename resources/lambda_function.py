@@ -81,7 +81,7 @@ def lambda_handler(event, context):
             (deleteMethod, favoritePath): lambda: deleteFavorite(event["queryStringParameters"])
         }
     
-        # Get the function from the dictionary and call it
+        # Get the function from the dictionary and call it.
         response = func_dict.get((httpMethod, path), lambda: buildResponse(500, {"Message": "Internal server error!"}))()
         return response
         
