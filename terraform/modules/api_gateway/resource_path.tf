@@ -106,3 +106,13 @@ module "resource_history_questions" {
     lambda_invoke_arn = var.lambda_invoke_arn
     enable_get = true
 }
+
+# /google_signin
+module "resource_google_api" {
+    source = "../api_gateway_resource"
+    path_part = "googleApi"
+    parent_id = aws_api_gateway_rest_api.api_gateway.root_resource_id
+    rest_api_id = aws_api_gateway_rest_api.api_gateway.id
+    lambda_invoke_arn = var.lambda_invoke_arn
+    enable_get = true
+}

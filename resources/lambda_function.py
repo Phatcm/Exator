@@ -1,9 +1,6 @@
 import json
 import logging
 
-from google.oauth2 import id_token
-from google.auth.transport import requests
-
 #Functions
 from def_buildresponse import buildResponse
 from def_questions import getQuestions, saveQuestions, modifyQuestions
@@ -13,6 +10,7 @@ from def_topic import deleteTopic
 from def_exam import saveExam, getExam
 from def_history import getHistoryAttempts, getHistoryQuestions
 from def_favorite import saveFavorite, getFavorite, deleteFavorite
+from def_google_api import verifyToken
 
 #Logger
 logger = logging.getLogger()
@@ -78,7 +76,9 @@ def lambda_handler(event, context):
             #Get favorite
             (getMethod, favoritePath): lambda: getFavorite(event["queryStringParameters"]),
             #Delete favorite
-            (deleteMethod, favoritePath): lambda: deleteFavorite(event["queryStringParameters"])
+            (deleteMethod, favoritePath): lambda: deleteFavorite(event["queryStringParameters"]),
+            #Google api
+            (getMethod, userPath): lambda: verifyToken(event["queryStringParameters"]["idToken"]),
         }
     
         # Get the function from the dictionary and call it
