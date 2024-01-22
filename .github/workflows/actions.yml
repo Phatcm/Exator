@@ -27,11 +27,7 @@ jobs:
         pip install --upgrade pip
         ls # Checking the files in current dir
         mkdir -p lambda_layer/python/ # Creating new directory for layer.
-        pip install --target ./lambda_layer/python/  google-auth
-        pip install --target ./lambda_layer/python/  google-auth-oauthlib
-        pip install --target ./lambda_layer/python/  google-auth-httplib2
-        pip install --target ./lambda_layer/python/  google-api-python-client
-        pip install --target ./lambda_layer/python/  "urllib3<2"
+        pip install --target ./lambda_layer/python/ -r requirements.txt # Installing dependencies in the new directory.
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
