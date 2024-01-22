@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - phat
+      - master
 jobs:
   deploy:
     name: dev-deploy
