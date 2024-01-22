@@ -52,7 +52,8 @@ def getExam(parameter):
                 "questions": questions,
                 "score": "NULL",
                 "submit_time": "NULL",
-                "complete_time": "NULL"
+                "complete_time": "NULL",
+                "marked_questions": []
             }
         )
         
@@ -96,6 +97,7 @@ def saveExam(requestBody):
         
         #Extract score from body
         score = body["score"]
+        marked_questions = body["marked_questions"]
         
         #Update time and score to dynamodb based on attempt_id
         response = attempts_table.update_item(
@@ -103,11 +105,12 @@ def saveExam(requestBody):
                 "username": username,
                 "attempt_id": attempt_id
             },
-            UpdateExpression="set score=:s, submit_time=:t, complete_time=:c",
+            UpdateExpression="set score=:s, submit_time=:t, complete_time=:c, marked_questions=:m",
             ExpressionAttributeValues={
                 ":s": score,
                 ":t": submit_time,
-                ":c": complete_time
+                ":c": complete_time,
+                ":m": marked_questions #List of marked questions
             },
             ReturnValues="UPDATED_NEW"
         )

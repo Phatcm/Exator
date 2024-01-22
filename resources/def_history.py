@@ -28,11 +28,11 @@ def getHistoryAttempts(parameters):
 def getHistoryQuestions(parameters):
     try:
         username = parameters["username"]
-        attempt_id = parameters["attempt_id"]
+        attempt_id = parameters["attemptId"]
         #Get attempts_id, submit_time from dynamodb
         response = attempts_table.query(
             KeyConditionExpression=Key('attempt_id').eq(attempt_id)&Key('username').eq(username),
-            ProjectionExpression="questions"
+            ProjectionExpression="marked_questions, topic, score, complete_time, submit_time",
         )
         return buildResponse(200, response["Items"])
     except Exception as e:
