@@ -103,7 +103,14 @@ resource "aws_api_gateway_deployment" "prod" {
         aws_api_gateway_integration.patch_password_integration,
         aws_api_gateway_integration.options_password,
         aws_api_gateway_method_response.options_password,
-        aws_api_gateway_integration_response.options_password
+        aws_api_gateway_integration_response.options_password,
+
+        #resource_test
+        module.resource_test.get_method_integration,
+        module.resource_test.post_method_integration,
+        module.resource_test.patch_method_integration,
+        module.resource_test.delete_method_integration,
+        module.resource_test.options_method_integration,
     ]
 }
 
