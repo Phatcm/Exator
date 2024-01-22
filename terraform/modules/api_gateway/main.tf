@@ -13,6 +13,7 @@ resource "aws_api_gateway_deployment" "prod" {
     triggers = {
         redeployment = sha1(
             jsonencode([
+                module.resource_test.etag,
                 file("modules/api_gateway/resource_health.tf"), 
                 file("modules/api_gateway/resource_question.tf"), 
                 file("modules/api_gateway/resource_questions.tf"), 
