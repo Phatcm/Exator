@@ -1,38 +1,41 @@
-import generateToken from "./signToken";
+import express, { Request, Response, NextFunction } from "express";
+import cookieParser from "cookie-parser";
+import userRouters from "./routes/userRouters";
+import cors from "cors";
+const serverless = require("serverless-http");
 
-const healthPath = "/health";
-const userPath = "/user";
+const app = express();
+//allow cors header
+app.use(
+  cors({
+    origin: "*", // Allow requests from any origin
+    methods: "*", // Allow all HTTP methods
+    allowedHeaders: [
+      "Content-Type",
+      "X-Amz-Date",
+      "Authorization",
+      "X-Api-Key",
+      "X-Amz-Security-Token",
+      "X-Amz-User-Agent",
+    ],
+    credentials: true, // Allow credentials (cookies, authorization headers) with HTTPS
+  })
+);
 
-export const handler = async (event) => {
-  console.log(event);
+app.use(express.json({ limit: "10kb" }));
+app.use(cookieParser());
 
-  let response;
+app.use((req: Request, res: Response, next: NextFunction) => {
+  console.log("Incoming Request URL:", req.url);
+  next();
+});
 
-  switch (true) {
-    case event.httpMethod === "GET" && event.path === healthPath:
-      response = buildResponse(200, { messages: "Hello from lambda!" });
-      break;
-    case event.httpMethod === "POST" && event.path === userPath:
-      response = buildResponse(200, { messages: "Hello from lambda!" });
-      break;
-    default:
-      response = buildResponse(404, "404 Not Found");
-  }
+app.get("/health", (req: Request, res: Response) => {
+  res.status(200).json({
+    message: "Hello from express lambda",
+  });
+});
 
-  return response;
-};
+app.use("/user", userRouters);
 
-const buildResponse = (statusCode: Number, body: Object) => {
-  return {
-    statusCode: statusCode,
-    headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Headers":
-        "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent",
-      "Access-Control-Allow-Credentials": "true", // Required for cookies, authorization headers with HTTPS
-      "Access-Control-Allow-Methods": "*",
-      "Access-Control-Allow-Origin": "*",
-    },
-    body: JSON.stringify(body),
-  };
-};
+module.exports.handler = serverless(app);

@@ -16,7 +16,7 @@ export default function User() {
   useEffect(() => {
     const getThemes = async () => {
       setLoading(true);
-      const url = `https://y6lgr4ka12.execute-api.ap-northeast-1.amazonaws.com/prod/topics?username=${user}`;
+      const url = `${process.env.REACT_APP_URL}/topics?username=${user}`;
       const response = await axios.get(url);
 
       const data = response.data;

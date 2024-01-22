@@ -10,8 +10,7 @@ export const CreateUser = (
 ) => {
   const table = new Table(construct, id, {
     tableName: process.env.DYNAMODB_TABLE_NAME,
-    partitionKey: { name: "username", type: AttributeType.STRING },
-    sortKey: { name: "password", type: AttributeType.NUMBER },
+    partitionKey: { name: "email", type: AttributeType.STRING },
     removalPolicy: RemovalPolicy.DESTROY,
   });
   table.grantFullAccess(lambda);

@@ -29,6 +29,15 @@ export const createApi = (
     resource.methods.forEach((method: any) => {
       spacesResource.addMethod(method, new LambdaIntegration(lambda, {}));
     });
+
+    if (resource.child) {
+      resource.child.forEach((el: any) => {
+        const childResource = spacesResource.addResource(el.name);
+        el.methods.forEach((method: any) => {
+          childResource.addMethod(method, new LambdaIntegration(lambda, {}));
+        });
+      });
+    }
   });
   return api;
 };

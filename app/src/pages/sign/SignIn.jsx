@@ -11,8 +11,7 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
 
   const login = async () => {
-    const url =
-      "https://dltc0y36g2.execute-api.ap-southeast-1.amazonaws.com/prod/user/signin";
+    const url = `${process.env.REACT_APP_URL}/user/signin`;
     const body = {
       email,
       password,

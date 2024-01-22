@@ -15,6 +15,17 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "jsonwebtoken": "^9.0.2"
+    "@aws-sdk/client-dynamodb": "^3.495.0",
+    "@aws-sdk/lib-dynamodb": "^3.495.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.5",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "install": "^0.13.0",
+    "jsonwebtoken": "^9.0.2",
+    "npm": "^10.3.0",
+    "serverless-http": "^3.2.0"
   }
 }
