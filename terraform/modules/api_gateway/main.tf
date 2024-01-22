@@ -13,17 +13,16 @@ resource "aws_api_gateway_deployment" "prod" {
     triggers = {
         redeployment = sha1(
             jsonencode([
-                file("modules/api_gateway/resource_health.tf"), 
-                file("modules/api_gateway/resource_question.tf"), 
-                file("modules/api_gateway/resource_questions.tf"), 
-                file("modules/api_gateway/resource_topic.tf"), 
-                file("modules/api_gateway/resource_topics.tf"),
-                file("modules/api_gateway/resource_exam.tf"),
-                file("modules/api_gateway/resource_history_attempts.tf"),
-                file("modules/api_gateway/resource_history_questions.tf"),
-                file("modules/api_gateway/resource_favorite.tf"),
-                file("modules/api_gateway/resource_user.tf"),
-                file("modules/api_gateway/resource_user_password.tf")
+                module.resource_health.etag,
+                module.resource_favorite.etag,
+                module.resource_history.etag,
+                module.resource_history_attempts.etag,
+                module.resource_history_questions.etag,
+                module.resource_exam.etag,
+                module.resource_topic.etag,
+                module.resource_topics.etag,
+                module.resource_question.etag,
+                module.resource_questions.etag,
             ])
         )
     }
@@ -32,77 +31,51 @@ resource "aws_api_gateway_deployment" "prod" {
         create_before_destroy = true
     }
     depends_on = [
-        #questions
-        aws_api_gateway_integration.get_questions_integration,
-        aws_api_gateway_integration.post_questions_integration,
-        aws_api_gateway_integration.patch_questions_integration,
-        aws_api_gateway_integration.options_questions,
-        aws_api_gateway_method_response.options_questions,
+        #resource_health
+        module.resource_health.get_method_integration,
+        module.resource_health.options_method_integration,
 
-        #question
-        aws_api_gateway_integration.get_question_integration,
-        aws_api_gateway_integration.post_question_integration,
-        aws_api_gateway_integration.patch_question_integration,
-        aws_api_gateway_integration.delete_question_integration,
-        aws_api_gateway_integration.options_question,
-        aws_api_gateway_method_response.options_question,
-        aws_api_gateway_integration_response.options_question,
-        aws_api_gateway_integration_response.options_questions,
+        #resource_favorite
+        module.resource_favorite.get_method_integration,
+        module.resource_favorite.post_method_integration,
+        module.resource_favorite.delete_method_integration,
+        module.resource_favorite.options_method_integration,
 
-        #topics
-        aws_api_gateway_integration.get_topics,
-        aws_api_gateway_integration.delete_topics,
-        aws_api_gateway_integration.options_topics,
-        aws_api_gateway_method_response.options_topics,
-        aws_api_gateway_integration_response.options_topics,
+        #resource_history_attempts
+        module.resource_history_attempts.get_method_integration,
+        module.resource_history_attempts.options_method_integration,
 
-        #topic
-        aws_api_gateway_integration.get_topic,
-        aws_api_gateway_integration.delete_topic,
-        aws_api_gateway_integration.options_topic,
-        aws_api_gateway_method_response.options_topic,
-        aws_api_gateway_integration_response.options_topic,
+        #resource_history_questions
+        module.resource_history_questions.get_method_integration,
+        module.resource_history_questions.options_method_integration,
 
-        #exam
-        aws_api_gateway_integration.get_exam_integration,
-        aws_api_gateway_integration.post_exam_integration,
-        aws_api_gateway_integration.options_exam,
-        aws_api_gateway_method_response.options_exam,
-        aws_api_gateway_integration_response.options_exam,
+        #resource_question
+        module.resource_question.get_method_integration,
+        module.resource_question.patch_method_integration,
+        module.resource_question.post_method_integration,
+        module.resource_question.delete_method_integration,
+        module.resource_question.options_method_integration,
 
-        #history_attempts
-        aws_api_gateway_integration.get_history_attempts_integration,
-        aws_api_gateway_integration.options_history_attempts,
-        aws_api_gateway_method_response.options_history_attempts,
-        aws_api_gateway_integration_response.options_history_attempts,
+        #resource_questions
+        module.resource_questions.get_method_integration,
+        module.resource_questions.patch_method_integration,
+        module.resource_questions.post_method_integration,
+        module.resource_questions.options_method_integration,
 
-        #history_questions
-        aws_api_gateway_integration.get_history_questions_integration,
-        aws_api_gateway_integration.options_history_questions,
-        aws_api_gateway_method_response.options_history_questions,
-        aws_api_gateway_integration_response.options_history_questions,
+        #resource_topic
+        module.resource_topic.get_method_integration,
+        module.resource_topic.delete_method_integration,
+        module.resource_topic.options_method_integration,
 
-        #favorite
-        aws_api_gateway_integration.get_favorite_integration,
-        aws_api_gateway_integration.post_favorite_integration,
-        aws_api_gateway_integration.delete_favorite_integration,
-        aws_api_gateway_integration.options_favorite,
-        aws_api_gateway_method_response.options_favorite,
-        aws_api_gateway_integration_response.options_favorite,
+        #resource_topics
+        module.resource_topics.get_method_integration,
+        module.resource_topics.delete_method_integration,
+        module.resource_topics.options_method_integration,
 
-        #user
-        aws_api_gateway_integration.get_user_integration,
-        aws_api_gateway_integration.post_user_integration,
-        aws_api_gateway_integration.options_user,
-        aws_api_gateway_method_response.options_user,
-        aws_api_gateway_integration_response.options_user,
-
-        #user_password
-        aws_api_gateway_integration.post_password_integration,
-        aws_api_gateway_integration.patch_password_integration,
-        aws_api_gateway_integration.options_password,
-        aws_api_gateway_method_response.options_password,
-        aws_api_gateway_integration_response.options_password
+        #resource_exam
+        module.resource_exam.get_method_integration,
+        module.resource_exam.post_method_integration,
+        module.resource_exam.options_method_integration,
     ]
 }
 
