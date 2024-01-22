@@ -1,5 +1,10 @@
 # modules/api_gateway_resource/outputs.tf
 
+output "resource_id" {
+    description = "The ID of the API Gateway resource"
+    value       = aws_api_gateway_resource.resource.id
+}
+
 output "etag" {
   description = "An etag-style string to trigger redeployments"
   value       = jsonencode(aws_api_gateway_resource.resource)
