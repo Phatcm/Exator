@@ -1,9 +1,9 @@
 variable "project_name" {
-  type = string
+  type    = string
   default = "Exator"
 }
 
 variable "region" {
-  type = string
-  default = "ap-northeast-1"
+  type    = string
+  default = "ap-southeast-1"
 }
