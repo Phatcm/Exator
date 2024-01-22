@@ -1,0 +1,8 @@
+.themeItem_limited-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Số lượng dòng tối đa bạn muốn hiển thị */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-all;
+  text-overflow: ellipsis;
+}

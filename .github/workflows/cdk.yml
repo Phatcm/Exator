@@ -1,0 +1,58 @@
+name: Deploy AWS CDK
+on:
+  push:
+    branches: master
+    paths:
+      - "cdk/**"
+      - "handle-sign/**"
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Clone the repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Ensure a full clone is performed for accurate path filtering
+
+      - name: install backend dependencies
+        working-directory: ./handle-sign
+        run: npm ci
+
+      - name: install lambda-build
+        working-directory: ./handle-sign
+        run: npm --save-dev i lambda-build
+
+      - name: build lamdbda function
+        working-directory: ./handle-sign
+        run: npx lambda-build archive -e src/index.ts -x sharp
+
+      - name: install AWS CDK
+        working-directory: ./cdk
+        run: sudo npm i -g aws-cdk
+
+      - name: install web app dependencies
+        working-directory: ./cdk
+        run: npm ci
+
+      - name: Configure aws credential
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: cdk bootstrap
+        working-directory: ./cdk
+        run: cdk bootstrap
+
+
+      - name: cdk synth
+        working-directory: ./cdk
+        run: cdk synth
+
+      - name: cdk deploy
+        working-directory: ./cdk
+        run: cdk deploy

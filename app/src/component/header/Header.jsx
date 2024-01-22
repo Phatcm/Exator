@@ -5,7 +5,7 @@ import { PiFinnTheHumanFill } from "react-icons/pi";
 
 export default function Header() {
   return (
-    <div className="bg-white rounded-xl w-full p-4 flex justify-between items-center">
+    <div className="bg-white rounded-xl w-full p-2 flex justify-between items-center h-full">
       <div className="flex justify-between items-center px-3 py-2 bg-[#eff7f9] rounded-xl w-[40%] min-w-[200px]">
         <IoSearchOutline className="text-[22px]"></IoSearchOutline>
         <input
