@@ -108,8 +108,6 @@ resource "aws_api_gateway_deployment" "prod" {
         #resource_test
         module.resource_test.get_method_integration,
         module.resource_test.post_method_integration,
-        module.resource_test.patch_method_integration,
-        module.resource_test.delete_method_integration,
         module.resource_test.options_method_integration,
     ]
 }

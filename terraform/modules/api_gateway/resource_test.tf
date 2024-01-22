@@ -6,6 +6,4 @@ module "resource_test" {
     lambda_invoke_arn = var.lambda_invoke_arn
     enable_post = true
     enable_get = true
-    enable_patch = true
-    enable_delete = true
 }
