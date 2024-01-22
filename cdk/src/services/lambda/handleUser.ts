@@ -16,7 +16,7 @@ export const createLambda = (construct: Construct, id: string, role: any) => {
     environment: {
       // BUCKET_NAME: process.env.BUCKET_NAME || "acv",
       DYNAMODB_TABLE_NAME: process.env.DYNAMODB_TABLE_NAME || "avc",
-      REGION: "ap-southeast-1",
+      REGION: "ap-northeast-1",
       JWT_SECRET: "KHAMMA_SECRET_KEY",
     },
   });
