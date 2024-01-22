@@ -57,17 +57,24 @@ module "favorite-db" {
 
 # Module for creating a Lambda function
 module "lambda-handler" {
-  source               = "./modules/lambda"
-  lambda_function_name = "Exator-lambda-function"
-  lambda_role_arn      = module.lambda-role.iam_role_arn
-  lambda_handler       = "lambda_function.lambda_handler"
-  lambda_runtime       = "python3.9"
-  output_path          = "../resources/lambda_function.zip"
-  source_dir           = "../resources/"
-  filename             = "../resources/lambda_function.zip"
-  #   s3_bucket_name       = module.results-db.s3_bucket_name
-  questions_table_name = module.questions-db.dynamodb_table_name
-  attempts_table_name  = module.attempts-db.dynamodb_table_name
+    source = "./modules/lambda"
+    #Layer
+    layer_name = "Exator-lambda-layer"
+    layer_source_dir = "../lambda_layer"
+    layer_output_path = "../lambda_layer_payload.zip"
+
+    #Function
+    lambda_function_name = "Exator-lambda-function"
+    lambda_role_arn = module.lambda-role.iam_role_arn
+    lambda_handler = "lambda_function.lambda_handler"
+    lambda_runtime = "python3.11"
+    output_path = "../resources/lambda_function.zip"
+    source_dir = "../resources/"
+    filename = "../resources/lambda_function.zip"
+    #Variables
+    s3_bucket_name = module.results-db.s3_bucket_name
+    questions_table_name = module.questions-db.dynamodb_table_name
+    attempts_table_name = module.attempts-db.dynamodb_table_name
 }
 
 # Module for creating an API Gateway
