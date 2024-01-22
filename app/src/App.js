@@ -1,5 +1,4 @@
 import { Route, Routes } from "react-router-dom";
-import AdminPage from "./pages/adminstration/AdminPage";
 import TestPage from "./pages/test/TestPage";
 import DashBoardPage from "./pages/dashboard/DashBoardPage";
 import NavigationMenu from "./component/navigation-menu/NavigationMenu";
@@ -15,7 +14,6 @@ import History from "./pages/test/history/History";
 import Favorite from "./pages/favorite/Favorite";
 import ReviewHistory from "./pages/test/history/review-history/ReviewHistory";
 import SignIn from "./pages/sign/SignIn";
-import { useEffect, useState } from "react";
 import SignUp from "./pages/sign/SignUp";
 
 function App() {
@@ -23,7 +21,7 @@ function App() {
   console.log(user);
 
   return !user.email ? (
-    <div>
+    <div className={``}>
       <Routes>
         <Route path="/" element={<SignIn />} />
         <Route path="/signIn" element={<SignIn />} />
@@ -45,7 +43,6 @@ function App() {
             <Route path="/test/exam" element={<Exam />} />
             <Route path="/test/history" element={<History />} />
             <Route path="/test/history/:id" element={<ReviewHistory />} />
-            <Route path="/admin" element={<AdminPage />} />
             <Route path="/mylibrary" element={<MyLibrary />} />
             <Route path="/dashboard/:user" element={<User />} />
             <Route path="/dashboard/:user/:theme" element={<Theme />} />

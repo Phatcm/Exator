@@ -11,21 +11,28 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
 
   const login = async () => {
-    const url = `${process.env.REACT_APP_URL}/user/signin`;
+    const url = `${process.env.REACT_APP_URL_USER}/user/signin`;
     const body = {
       email,
       password,
     };
-    const response = await axios.post(url, body);
-    if (response.status === 200) {
-      dispatch(setUser({ email }));
-      navigate("/dashboard");
-    }
+    try {
+      const response = await axios.post(url, body);
+      if (response.status === 200) {
+        const userData = response.data.body.user;
+        dispatch(setUser(userData));
+        // console.log(response);
+        // console.log(document.cookie);
+        navigate("/dashboard");
+      }
+    } catch (error) {}
   };
   return (
-    <div>
-      <div className="mx-auto max-w-[380px] p-7 mt-[100px]">
-        <h1 className="text-[32px] text-center py-7 font-['League_Gothic'] leading-tight"></h1>
+    <div className="">
+      <div className="mx-auto max-w-[380px] p-7 mt-[100px] shadow-xl rounded-xl">
+        <h1 className="text-[32px] text-center py-7 font-['League_Gothic'] leading-tight">
+          EXATOR
+        </h1>
         <div className="">
           <input
             type="text"
@@ -65,13 +72,12 @@ export default function SignIn() {
           </button>
           <p className="text-center text-[#8d8d8d] text-[12px] my-5 flex justify-center">
             Not a Member?&nbsp;
-            <a
-              className="underline text-[#111] hover:text-red-500 cursor-pointer"
+            <span
+              className="underline text-[#111] hover:text-red-500 cursor-spanointer"
               onClick={() => navigate("/signup")}
             >
               Join Us
-            </a>
-            .
+            </span>
           </p>
         </div>
       </div>
