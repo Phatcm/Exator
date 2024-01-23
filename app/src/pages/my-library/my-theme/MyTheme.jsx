@@ -84,8 +84,7 @@ export default function MyTheme() {
     if (validArray.length > 0) {
       setValidateCard(validArray);
     } else {
-      const url =
-        "https://y6lgr4ka12.execute-api.ap-northeast-1.amazonaws.com/prod/questions";
+      const url = `${process.env.REACT_APP_URL}/questions`;
       let editArray = [...editCards];
       let newArray = [...newCards];
       let array = editArray.concat(newArray);
@@ -118,7 +117,7 @@ export default function MyTheme() {
     return question[0] + stringFormatAnswers(question[1]) + "|" + question[2];
   };
   const deleteTheme = async () => {
-    const url = `https://y6lgr4ka12.execute-api.ap-northeast-1.amazonaws.com/prod/topic?username=nice&topic=${theme}`;
+    const url = `${process.env.REACT_APP_URL}/topic?username=nice&topic=${theme}`;
     const response = await axios.delete(url);
     if (response.status === 200) {
       console.log("Delete success");

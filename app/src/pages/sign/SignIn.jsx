@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "../../redux/userSlice";
+import GoogleSignIn from "../../component/google-signin/GoogleSignIn";
 
 export default function SignIn() {
   const dispatch = useDispatch();
@@ -17,13 +18,15 @@ export default function SignIn() {
       password,
     };
     try {
-      const response = await axios.post(url, body);
+      // const response = await axios.post(url, body, { withCredentials: true });
+      const response = await axios.post(url, body, { withCredentials: true });
+
       if (response.status === 200) {
+        console.log(response);
         const userData = response.data.body.user;
-        dispatch(setUser(userData));
-        // console.log(response);
+        // dispatch(setUser(userData));
         // console.log(document.cookie);
-        navigate("/dashboard");
+        // navigate("/dashboard");
       }
     } catch (error) {}
   };
@@ -73,12 +76,16 @@ export default function SignIn() {
           <p className="text-center text-[#8d8d8d] text-[12px] my-5 flex justify-center">
             Not a Member?&nbsp;
             <span
-              className="underline text-[#111] hover:text-red-500 cursor-spanointer"
+              className="underline text-[#111] hover:text-red-500 cursor-pointer"
               onClick={() => navigate("/signup")}
             >
               Join Us
             </span>
           </p>
+
+          <div className="">
+            <GoogleSignIn></GoogleSignIn>
+          </div>
         </div>
       </div>
     </div>
