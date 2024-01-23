@@ -4,6 +4,7 @@ import Pagination from "../../component/pagination/Pagination";
 import axios from "axios";
 import Loading from "../../component/loading/Loading";
 import LinkNav from "../../component/link-nav/LinkNav";
+import { useSelector } from "react-redux";
 
 export default function DashBoardPage() {
   const [themes, setThemes] = useState([]);

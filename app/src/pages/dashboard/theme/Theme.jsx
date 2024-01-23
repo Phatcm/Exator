@@ -10,8 +10,11 @@ import NotFound from "../../notfound/NotFound";
 import Loading from "../../../component/loading/Loading";
 import LinkNav from "../../../component/link-nav/LinkNav";
 import { FaStar } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 export default function Theme() {
+  const myuser = useSelector((state) => state.user);
+
   const { user, theme } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -38,7 +41,7 @@ export default function Theme() {
     };
 
     const checkFavorite = async () => {
-      const url = `${process.env.REACT_APP_URL}/favorite?username=nice`;
+      const url = `${process.env.REACT_APP_URL}/favorite?username=${myuser.email}`;
       const response = await axios.get(url);
       if (response.status === 200) {
         response.data.forEach((el) => {
@@ -56,14 +59,14 @@ export default function Theme() {
     navigate(link);
   };
   const saveFavorite = async () => {
-    const url = `${process.env.REACT_APP_URL}/favorite?username=nice&owner=${user}&topic=${theme}`;
+    const url = `${process.env.REACT_APP_URL}/favorite?username=${myuser.email}&owner=${user}&topic=${theme}`;
     const response = await axios.post(url);
     if (response.status === 200) {
       setIsFavorite(true);
     }
   };
   const cancelFavorite = async () => {
-    const url = `${process.env.REACT_APP_URL}/favorite?username=nice&owner=${user}&topic=${theme}`;
+    const url = `${process.env.REACT_APP_URL}/favorite?username=${myuser.email}&owner=${user}&topic=${theme}`;
     const response = await axios.delete(url);
     if (response.status === 200) {
       setIsFavorite(false);

@@ -7,8 +7,11 @@ import CreateTopic from "../../component/create-topic/CreateTopic";
 import Notification from "../../component/notification-popup/Notification";
 import LinkNav from "../../component/link-nav/LinkNav";
 import Loading from "../../component/loading/Loading";
+import { useSelector } from "react-redux";
 
 export default function MyLibrary() {
+  const user = useSelector((state) => state.user);
+
   const [themes, setThemes] = useState([]);
   const [isCreateTopic, setIsCreateTopic] = useState(false);
   const [showSuccesed, setShowSuccessed] = useState(false);
@@ -22,7 +25,7 @@ export default function MyLibrary() {
 
   const getThemes = async () => {
     setLoading(true);
-    const url = `${process.env.REACT_APP_URL}/topics?username=nice`;
+    const url = `${process.env.REACT_APP_URL}/topics?username=${user.email}`;
     const response = await axios.get(url);
 
     const data = response.data;

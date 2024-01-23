@@ -3,14 +3,17 @@ import React, { useEffect, useState } from "react";
 import "./index.css";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../../component/loading/Loading";
+import { useSelector } from "react-redux";
 export default function History() {
   const navigate = useNavigate();
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(false);
+  const user = useSelector((state) => state.user);
+
   useEffect(() => {
     const getThemes = async () => {
       setLoading(true);
-      const url = `${process.env.REACT_APP_URL}/history/attempts?username=nice`;
+      const url = `${process.env.REACT_APP_URL}/history/attempts?username=${user.email}`;
       const response = await axios.get(url);
 
       const data = response.data;
