@@ -53,19 +53,6 @@ function App() {
           </Routes>
         </div>
       </div>
-      <div
-        onClick={() => {
-          const url =
-            "https://dltc0y36g2.execute-api.ap-southeast-1.amazonaws.com/prod/user/updateMe";
-
-          const response = axios.patch(url, {
-            photo: "abc.png",
-            username: "CK",
-          });
-        }}
-      >
-        click me
-      </div>
     </div>
   );
 }

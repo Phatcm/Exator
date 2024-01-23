@@ -4,15 +4,17 @@ import Loading from "../../component/loading/Loading";
 import Pagination from "../../component/pagination/Pagination";
 import LinkNav from "../../component/link-nav/LinkNav";
 import FavoriteItem from "../../component/favorite-item/FavoriteItem";
+import { useSelector } from "react-redux";
 
 export default function Favorite() {
   const [favorite, setFavorite] = useState([]);
   const [loading, setLoading] = useState(false);
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     const getThemes = async () => {
       setLoading(true);
-      const url = `${process.env.REACT_APP_URL}/favorite?username=nice`;
+      const url = `${process.env.REACT_APP_URL}/favorite?username=${user.email}`;
       const response = await axios.get(url);
       if (response.status === 200) {
         const data = response.data;

@@ -14,8 +14,10 @@ import CardEdit from "../../../component/card-edit/CardEdit";
 import NotFound from "../../notfound/NotFound";
 import { v4 as uuidv4 } from "uuid";
 import Loading from "../../../component/loading/Loading";
+import { useSelector } from "react-redux";
 
 export default function MyTheme() {
+  const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const { theme } = useParams();
   const [isSetting, setIsSetting] = useState(false);
@@ -29,7 +31,7 @@ export default function MyTheme() {
   useEffect(() => {
     const getQuestions = async () => {
       setLoading(true);
-      const url = `${process.env.REACT_APP_URL}/questions?username=nice&topic=${theme}`;
+      const url = `${process.env.REACT_APP_URL}/questions?username=${user.email}&topic=${theme}`;
       const response = await axios.get(url);
 
       const data = response.data;
@@ -89,7 +91,7 @@ export default function MyTheme() {
       let newArray = [...newCards];
       let array = editArray.concat(newArray);
       const body = {
-        username: "nice",
+        username: user.email,
         topic: topic.topic,
         description: topic.description,
         questions: stringFormatQuestions(array),
@@ -117,7 +119,7 @@ export default function MyTheme() {
     return question[0] + stringFormatAnswers(question[1]) + "|" + question[2];
   };
   const deleteTheme = async () => {
-    const url = `${process.env.REACT_APP_URL}/topic?username=nice&topic=${theme}`;
+    const url = `${process.env.REACT_APP_URL}/topic?username=${user.email}&topic=${theme}`;
     const response = await axios.delete(url);
     if (response.status === 200) {
       console.log("Delete success");
@@ -158,7 +160,7 @@ export default function MyTheme() {
     setEditCards(ncards);
   };
   const testClick = () => {
-    const link = `/test/maketest?isMine=1&username=nice&topic=${theme}`;
+    const link = `/test/maketest?isMine=1&username=${user.email}&topic=${theme}`;
     navigate(link);
   };
   return !notFound ? (

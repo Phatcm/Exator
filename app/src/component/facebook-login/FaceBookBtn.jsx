@@ -1,7 +1,8 @@
 import React from "react";
 import FacebookLogin from "@greatsumini/react-facebook-login";
 import axios from "axios";
-
+import { LoginSocialFacebook } from "reactjs-social-login";
+import { FacebookLoginButton } from "react-social-login-buttons";
 const responseFacebook = (response) => {
   console.log(response);
   let accessToken = response.accessToken; // This is your Facebook access token
@@ -24,12 +25,32 @@ const responseFacebook = (response) => {
 
 function FaceBookBtn() {
   return (
-    <FacebookLogin
+    // <FacebookLogin
+    //   appId="1069347884398455"
+    //   autoLoad={true}
+    //   onSuccess={(response) => {
+    //     console.log("Login Success!", response);
+    //   }}
+    //   onFail={(error) => {
+    //     console.log("Login Failed!", error);
+    //   }}
+    //   onProfileSuccess={(response) => {
+    //     console.log("Get Profile Success!", response);
+    //   }}
+    // />
+    <LoginSocialFacebook
       appId="1069347884398455"
-      autoLoad={true}
-      fields="name,email,picture"
-      callback={responseFacebook}
-    />
+      onResolve={(response) => {
+        console.log(response);
+        // setProfile(response.data);
+        // sendTokenToServer(response.data.accessToken);
+      }}
+      onReject={(error) => {
+        console.log(error);
+      }}
+    >
+      <FacebookLoginButton />
+    </LoginSocialFacebook>
   );
 }
 

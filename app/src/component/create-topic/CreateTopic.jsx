@@ -5,6 +5,7 @@ import { IoCreateOutline } from "react-icons/io5";
 import { PiUploadSimple } from "react-icons/pi";
 import Notification from "../notification-popup/Notification";
 import Loading from "../loading/Loading";
+import { useSelector } from "react-redux";
 
 export default function CreateTopic({
   setIsCreateTopic,
@@ -12,6 +13,7 @@ export default function CreateTopic({
   setShowFailed,
   getThemes,
 }) {
+  const user = useSelector((state) => state.user);
   const [titleFocus, setTitleFocus] = useState(false);
   const [decFocus, setDecFocus] = useState(false);
   const [textFocus, setTextFocus] = useState(false);
@@ -20,7 +22,6 @@ export default function CreateTopic({
   const [descriptionValue, setdescriptionValue] = useState("");
   const [textValue, setTextValue] = useState("");
   const [titleError, setTitleError] = useState(false);
-
   const createOnClick = async () => {
     if (titleValue.trim() === "") {
       setTitleError(true);
@@ -29,7 +30,7 @@ export default function CreateTopic({
     setLoading(true);
     const url = process.env.REACT_APP_URL + "/questions";
     const body = {
-      username: "nice",
+      username: user.email,
       topic: titleValue.trim(),
       description: descriptionValue.trim(),
       questions: textValue,
