@@ -10,7 +10,8 @@ from def_topic import deleteTopic
 from def_exam import saveExam, getExam
 from def_history import getHistoryAttempts, getHistoryQuestions
 from def_favorite import saveFavorite, getFavorite, deleteFavorite
-from def_google_api import verifyToken
+from def_external_signin import verifyTokenGG, verifyTokenFB
+
 
 #Logger
 logger = logging.getLogger()
@@ -32,11 +33,12 @@ examPath = "/exam"
 historyAttemptsPath = "/history/attempts"
 historyQuestionsPath = "/history/questions"
 favoritePath = "/favorite"
-userPath = "/user"
-userPasswordPath = "/user/password"
+googleApiPath = "/googleApi"
+facebookApiPath = "/facebookApi"
 
 #Lambda Handler
 def lambda_handler(event, context):
+    print(event)
     try:
         httpMethod = event["httpMethod"]
         path = event["path"]
@@ -78,7 +80,9 @@ def lambda_handler(event, context):
             #Delete favorite
             (deleteMethod, favoritePath): lambda: deleteFavorite(event["queryStringParameters"]),
             #Google api
-            (getMethod, userPath): lambda: verifyToken(event["queryStringParameters"]["idToken"]),
+            (postMethod, googleApiPath): lambda: verifyTokenGG(json.loads(event["body"])),
+            #Facebook api
+            (postMethod, facebookApiPath): lambda: verifyTokenFB(json.loads(event["body"])),
         }
     
         # Get the function from the dictionary and call it
