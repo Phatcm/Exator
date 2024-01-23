@@ -23,7 +23,8 @@ resource "aws_api_gateway_deployment" "prod" {
                 module.resource_topics.etag,
                 module.resource_question.etag,
                 module.resource_questions.etag,
-                module.resource_google_api.etag
+                module.resource_google_api.etag,
+                module.resource_facebook_api.etag
             ])
         )
     }
@@ -79,8 +80,12 @@ resource "aws_api_gateway_deployment" "prod" {
         module.resource_exam.options_method_integration,
 
         #google api
-        module.resource_google_api.get_method_integration,
-        module.resource_google_api.options_method_integration
+        module.resource_google_api.post_method_integration,
+        module.resource_google_api.options_method_integration,
+
+        #facebook api
+        module.resource_facebook_api.post_method_integration,
+        module.resource_facebook_api.options_method_integration
     ]
 }
 
