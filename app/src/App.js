@@ -15,10 +15,11 @@ import Favorite from "./pages/favorite/Favorite";
 import ReviewHistory from "./pages/test/history/review-history/ReviewHistory";
 import SignIn from "./pages/sign/SignIn";
 import SignUp from "./pages/sign/SignUp";
+import Cookies from "universal-cookie";
+import axios from "axios";
 
 function App() {
   const user = useSelector((state) => state.user);
-  console.log(user);
 
   return !user.email ? (
     <div className={``}>
@@ -51,6 +52,19 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
+      </div>
+      <div
+        onClick={() => {
+          const url =
+            "https://dltc0y36g2.execute-api.ap-southeast-1.amazonaws.com/prod/user/updateMe";
+
+          const response = axios.patch(url, {
+            photo: "abc.png",
+            username: "CK",
+          });
+        }}
+      >
+        click me
       </div>
     </div>
   );
