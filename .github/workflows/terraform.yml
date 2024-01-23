@@ -24,9 +24,6 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: 3.11
-    
-    - name : Delete lambda_layer folder
-      run: rm -rf lambda_layer
 
     - name: Create layers
       run: |

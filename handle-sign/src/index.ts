@@ -6,9 +6,10 @@ const serverless = require("serverless-http");
 
 const app = express();
 //allow cors header
+
 app.use(
   cors({
-    origin: "*", // Allow requests from any origin
+    origin: "https://exator.vercel.app", // Allow requests from any origin
     methods: "*", // Allow all HTTP methods
     allowedHeaders: [
       "Content-Type",
@@ -31,8 +32,10 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 app.get("/health", (req: Request, res: Response) => {
+  const ipAddress = req.ip;
+
   res.status(200).json({
-    message: "Hello from express lambda",
+    message: `Hello! Your IP address is: ${ipAddress}`,
   });
 });
 
