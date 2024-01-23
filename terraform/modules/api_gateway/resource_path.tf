@@ -114,5 +114,15 @@ module "resource_google_api" {
     parent_id = aws_api_gateway_rest_api.api_gateway.root_resource_id
     rest_api_id = aws_api_gateway_rest_api.api_gateway.id
     lambda_invoke_arn = var.lambda_invoke_arn
-    enable_get = true
+    enable_post = true
+}
+
+# /facebook_signin
+module "resource_facebook_api" {
+    source = "../api_gateway_resource"
+    path_part = "facebookApi"
+    parent_id = aws_api_gateway_rest_api.api_gateway.root_resource_id
+    rest_api_id = aws_api_gateway_rest_api.api_gateway.id
+    lambda_invoke_arn = var.lambda_invoke_arn
+    enable_post = true
 }
