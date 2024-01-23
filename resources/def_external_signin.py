@@ -73,8 +73,8 @@ def verifyTokenFB(requestBody):
         id_token_str = requestBody["id_token"]
 
         # Specify the CLIENT_ID of the app that accesses the backend
-        APP_ID = "1069347884398455"
-        APP_SECRET = "a2320e5adffaa6149cb6decb5f65703a"
+        APP_ID = os.environ['FB_APP_ID']
+        APP_SECRET = os.environ['FB_APP_SECRET']
 
         # Verify the ID token
         url = f'https://graph.facebook.com/debug_token?input_token={id_token_str}&access_token={APP_ID}|{APP_SECRET}'
