@@ -18,7 +18,6 @@ export default function SignIn() {
       password,
     };
     try {
-      // const response = await axios.post(url, body, { withCredentials: true });
       const response = await axios.post(url, body, { withCredentials: true });
 
       if (response.status === 200) {

@@ -72,7 +72,6 @@ export const signIn = catchAsync(
     }
 
     //check user exist
-    console.log(email);
 
     const data = await getUser(email);
 

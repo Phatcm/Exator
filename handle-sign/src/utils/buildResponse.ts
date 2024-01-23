@@ -2,7 +2,7 @@ import { Response } from "express";
 
 export const buildResponse = (
   res: Response,
-  statusCode: Number,
+  statusCode: number,
   status: string,
   body: object
 ) => {
