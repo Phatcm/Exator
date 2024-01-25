@@ -11,6 +11,7 @@ from def_exam import saveExam, getExam
 from def_history import getHistoryAttempts, getHistoryQuestions
 from def_favorite import saveFavorite, getFavorite, deleteFavorite
 from def_external_signin import verifyTokenGG, verifyTokenFB
+from def_send_email import sendResetPasswordEmail
 
 
 #Logger
@@ -35,6 +36,7 @@ historyQuestionsPath = "/history/questions"
 favoritePath = "/favorite"
 googleApiPath = "/googleApi"
 facebookApiPath = "/facebookApi"
+emailPath = "/email"
 
 #Lambda Handler
 def lambda_handler(event, context):
@@ -83,6 +85,8 @@ def lambda_handler(event, context):
             (postMethod, googleApiPath): lambda: verifyTokenGG(json.loads(event["body"])),
             #Facebook api
             (postMethod, facebookApiPath): lambda: verifyTokenFB(json.loads(event["body"])),
+            #Send email
+            (postMethod, emailPath): lambda: sendResetPasswordEmail(json.loads(event["body"]))
         }
     
         # Get the function from the dictionary and call it
