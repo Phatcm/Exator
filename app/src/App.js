@@ -29,7 +29,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const checkLoggedIn = async () => {
-      const url = `https://sxn2p36rx3.execute-api.ap-northeast-1.amazonaws.com/prod/user/isLoggedIn`;
+      const url = `${process.env.REACT_APP_URL_USER}}/user/isLoggedIn`;
       const jwt = Cookies.get("jwt");
       if (!jwt) {
         setLoading(false);
