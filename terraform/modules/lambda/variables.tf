@@ -1,18 +1,18 @@
-variable "layer_name" {
-    type        = string
-    default     = "lambda_layer"
-    description = "The name of the Lambda layer"
-}
+# variable "layer_name" {
+#     type        = string
+#     default     = "lambda_layer"
+#     description = "The name of the Lambda layer"
+# }
 
-variable "layer_source_dir" {
-    type        = string
-    description = "The directory containing the Lambda layer source code"
-}
+# variable "layer_source_dir" {
+#     type        = string
+#     description = "The directory containing the Lambda layer source code"
+# }
 
-variable "layer_output_path" {
-    type        = string
-    description = "The path where the Lambda layer deployment package will be stored"
-}
+# variable "layer_output_path" {
+#     type        = string
+#     description = "The path where the Lambda layer deployment package will be stored"
+# }
 
 
 variable "lambda_function_name" {
