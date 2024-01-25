@@ -91,10 +91,9 @@ def verifyTokenFB(requestBody):
         return buildResponse(200, "body")
     except ValueError as e:
         # Invalid token
-        logger.error('Invalid token: ', e)
+        logger.error('Invalid token: %s', e)
         return buildResponse(401, {"Message": f"Invalid token: {e}"})
     except Exception as e:
-        logger.error('An error occurred: ', e)
+        logger.error('An error occurred: %s', e)
         return buildResponse(500, {"Message": f"An error occurred: {e}"})
-    
     
