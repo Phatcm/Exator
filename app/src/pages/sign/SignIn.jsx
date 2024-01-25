@@ -26,7 +26,6 @@ export default function SignIn() {
       return;
     }
     const url = `${process.env.REACT_APP_URL_USER}/user/signin`;
-    // const url = `https://sxn2p36rx3.execute-api.ap-northeast-1.amazonaws.com/prod/user/signin`;
 
     const body = {
       email,
@@ -37,7 +36,6 @@ export default function SignIn() {
       const response = await axios.post(url, body, { withCredentials: true });
 
       if (response.status === 200) {
-        console.log(response);
         const userData = response.data.body.user;
         const options = {
           secure: true, // Cookie will only be sent over HTTPS
