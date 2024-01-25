@@ -9,7 +9,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://exator.vercel.app", // Allow requests from any origin
+    origin: true, // Allow requests from any origin
     methods: "*", // Allow all HTTP methods
     allowedHeaders: [
       "Content-Type",
@@ -25,11 +25,6 @@ app.use(
 
 app.use(express.json({ limit: "10kb" }));
 app.use(cookieParser());
-
-app.use((req: Request, res: Response, next: NextFunction) => {
-  console.log("Incoming Request URL:", req.url);
-  next();
-});
 
 app.get("/health", (req: Request, res: Response) => {
   const ipAddress = req.ip;

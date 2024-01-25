@@ -5,10 +5,12 @@ import axios from "axios";
 import Loading from "../../component/loading/Loading";
 import LinkNav from "../../component/link-nav/LinkNav";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 export default function DashBoardPage() {
   const [themes, setThemes] = useState([]);
   const [loading, setLoading] = useState(false);
+  let { search } = useParams();
 
   useEffect(() => {
     const getThemes = async () => {
@@ -16,13 +18,14 @@ export default function DashBoardPage() {
       const url = `${process.env.REACT_APP_URL}/topics`;
       const response = await axios.get(url);
 
-      const data = response.data;
+      let data = response.data;
+      if (search) data = data.filter((theme) => theme.topic.includes(search));
       setThemes(data);
       setLoading(false);
     };
     getThemes();
     return () => {};
-  }, []);
+  }, [search]);
   return (
     <div className="h-full flex flex-col">
       {/* <h1 className="mt-2 text-[20px] font-semibold">Dashboard</h1> */}

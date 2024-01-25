@@ -20,6 +20,10 @@ export const Resources: any = [
         methods: ["POST"],
       },
       {
+        name: "signinWithGoogle",
+        methods: ["POST"],
+      },
+      {
         name: "signout",
         methods: ["POST"],
       },
@@ -30,6 +34,18 @@ export const Resources: any = [
       {
         name: "updateMe",
         methods: ["PATCH"],
+      },
+      {
+        name: "isLoggedIn",
+        methods: ["POST"],
+      },
+      {
+        name: "forgotPassword",
+        methods: ["POST"],
+      },
+      {
+        name: "resetPassword",
+        methods: ["POST"],
       },
     ],
   },

@@ -9,9 +9,14 @@ export default function LinkNav({ linksArr }) {
   useEffect(() => {
     let newNavElemet = [...navElement];
     linksArr.forEach((name, key) => {
-      let link = name.replace(/\s/g, "").toLowerCase();
+      let link = "";
+      if (key === 0) {
+        link = name.replace(/\s/g, "").toLowerCase();
+      } else link = name;
+
       newNavElemet.push(link);
     });
+
     setNavElement(newNavElemet);
   }, []);
 

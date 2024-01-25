@@ -7,18 +7,20 @@ export const sendToken = (user: User, res: Response) => {
 
   const cookieOptions = {
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    httpOnly: false,
-    secure: false,
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
   };
 
   res.cookie("jwt", token, cookieOptions);
 
   user.password = undefined;
-
+  res.set();
   res.status(200).json({
     status: "success",
     body: {
       user,
+      token,
     },
   });
 };

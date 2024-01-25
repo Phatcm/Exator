@@ -39,14 +39,8 @@ export default function CreateTopic({
     if (response.status === 200) {
       setShowSuccessed(true);
       getThemes();
-      setTimeout(() => {
-        setShowSuccessed(false);
-      }, 3000);
     } else {
       setShowFailed(true);
-      setTimeout(() => {
-        setShowFailed(false);
-      }, 3000);
     }
     if (response) console.log(response);
     setLoading(false);
@@ -145,7 +139,7 @@ export default function CreateTopic({
             </div>
           </div>
         ) : (
-          <Loading></Loading>
+          <Loading size={"l"}></Loading>
         )}
       </div>
     </Fragment>

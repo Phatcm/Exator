@@ -19,6 +19,7 @@
     "@aws-sdk/lib-dynamodb": "^3.495.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.5",
+    "axios": "^1.6.6",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
