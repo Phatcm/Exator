@@ -71,7 +71,7 @@ export default function TestPage() {
         };
 
         dispatch(setExam(payload));
-        // navigate("/test/exam");
+        navigate("/test/exam");
       }
     }
     setTimeout(() => {
@@ -211,7 +211,7 @@ export default function TestPage() {
             <p className="text-[16px] font-medium">Take an exam</p>
             {loading ? (
               <div>
-                <Loading size={"m"}></Loading>
+                <Loading size={"s"}></Loading>
               </div>
             ) : (
               <FaChevronRight className="text-[22px] ml-2 group-hover:translate-x-4 transition-all duration-500 "></FaChevronRight>
