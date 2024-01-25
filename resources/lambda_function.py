@@ -37,6 +37,7 @@ favoritePath = "/favorite"
 googleApiPath = "/googleApi"
 facebookApiPath = "/facebookApi"
 emailPath = "/email"
+verifyEmailPath = "/verify"
 
 #Lambda Handler
 def lambda_handler(event, context):
@@ -87,6 +88,8 @@ def lambda_handler(event, context):
             (postMethod, facebookApiPath): lambda: verifyTokenFB(json.loads(event["body"])),
             #Send email
             (postMethod, emailPath): lambda: sendResetPasswordEmail(json.loads(event["body"]))
+            #verify email
+            (postMethod, verifyEmailPath): lambda: verify_email_address(json.loads(event["body"]))
         }
     
         # Get the function from the dictionary and call it

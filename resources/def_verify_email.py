@@ -1,8 +1,9 @@
 import boto3
 from def_buildresponse import buildResponse
 
-def verify_email_address(email):
+def verify_email_address(requestBody):
     try:
+        email = requestBody["email"]
         client = boto3.client('ses', region_name='ap-northeast-1')
         response = client.verify_email_identity(
             EmailAddress=email
