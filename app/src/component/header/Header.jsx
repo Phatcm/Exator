@@ -77,7 +77,7 @@ export default function Header() {
           <div ref={ref} className="absolute top-full right-0 z-50">
             <div className="px-4 py-2 bg-white rounded-xl border flex flex-col items-start">
               <div className="p-2 text-[18px]">
-                <p className="">Khammaaa</p>
+                <p className="">{user.name}</p>
               </div>
               <div className="w-full h-[2px] bg-gray-300"></div>
               <div className="pt-4 flex flex-col gap-2 w-full">
