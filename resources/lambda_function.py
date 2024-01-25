@@ -87,7 +87,7 @@ def lambda_handler(event, context):
             #Facebook api
             (postMethod, facebookApiPath): lambda: verifyTokenFB(json.loads(event["body"])),
             #Send email
-            (postMethod, emailPath): lambda: sendResetPasswordEmail(json.loads(event["body"]))
+            (postMethod, emailPath): lambda: sendResetPasswordEmail(json.loads(event["body"])),
             #verify email
             (postMethod, verifyEmailPath): lambda: verify_email_address(json.loads(event["body"]))
         }
