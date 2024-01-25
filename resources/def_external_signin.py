@@ -3,6 +3,7 @@ import logging
 import boto3
 import requests
 from def_buildresponse import buildResponse
+from def_verify_email import verify_email_address
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 
@@ -48,15 +49,20 @@ def verifyTokenGG(requestBody):
                     "role": "user"
                 }
             )        
+            
+        #Sent verify email
+        verify_email_address({"email": email})
         
         body = {
-            "Message": "User authenticated successfully",
+            "Message": "User authenticated successfully, please check your mail to verify your account",
             "body": {
                 "userid": userid,
                 "email": email,
                 "name": name
             }
         }
+        
+        
 
         return buildResponse(200, body)
     except ValueError as e:

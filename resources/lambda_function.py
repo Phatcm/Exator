@@ -12,6 +12,7 @@ from def_history import getHistoryAttempts, getHistoryQuestions
 from def_favorite import saveFavorite, getFavorite, deleteFavorite
 from def_external_signin import verifyTokenGG, verifyTokenFB
 from def_send_email import sendResetPasswordEmail
+from def_verify_email import verify_email_address
 
 
 #Logger
@@ -37,7 +38,7 @@ favoritePath = "/favorite"
 googleApiPath = "/googleApi"
 facebookApiPath = "/facebookApi"
 emailPath = "/email"
-verifyEmailPath = "/verify"
+verifyEmailPath = "/email/verify"
 
 #Lambda Handler
 def lambda_handler(event, context):

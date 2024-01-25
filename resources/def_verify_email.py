@@ -1,4 +1,5 @@
 import boto3
+import json
 from def_buildresponse import buildResponse
 
 def verify_email_address(requestBody):
@@ -8,6 +9,6 @@ def verify_email_address(requestBody):
         response = client.verify_email_identity(
             EmailAddress=email
         )
-        return buildResponse(200, {"Message": "Email sent! Message ID:" + response['MessageId']})
+        return buildResponse(200, {"Message": "Email sent! Message ID:" +  json.dumps(response)})
     except Exception as e:
         return buildResponse(500, {"Message": "Internal server error: " + str(e)})
