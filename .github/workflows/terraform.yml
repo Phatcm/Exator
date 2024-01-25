@@ -2,9 +2,7 @@ on:
   push:
     branches:
       - master
-    paths:
-      - "resources/**"
-      - "terraform/**"
+      - phat
 jobs:
   deploy:
     name: dev-deploy
