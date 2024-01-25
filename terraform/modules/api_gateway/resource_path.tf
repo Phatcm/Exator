@@ -136,3 +136,13 @@ module "resource_send_email" {
     lambda_invoke_arn = var.lambda_invoke_arn
     enable_post = true
 }
+
+# /verify_email
+module "resource_verify_email" {
+    source = "../api_gateway_resource"
+    path_part = "verify"
+    parent_id = module.resource_send_email.resource_id
+    rest_api_id = aws_api_gateway_rest_api.api_gateway.id
+    lambda_invoke_arn = var.lambda_invoke_arn
+    enable_post = true
+}

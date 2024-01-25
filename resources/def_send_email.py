@@ -70,13 +70,6 @@ def sendResetPasswordEmail(requestBody):
         return buildResponse(500, {"Message": "Internal server error: " + str(e)})
     else:
         return buildResponse(200, {"Message": "Email sent! Message ID:" + response['MessageId']})
-    
-def verify_email_address(email):
-    client = boto3.client('ses', region_name='ap-northeast-1')
-    response = client.verify_email_identity(
-        EmailAddress=email
-    )
-    return response
 
 def is_email_verified(email):
     client = boto3.client('ses', region_name='ap-northeast-1')
