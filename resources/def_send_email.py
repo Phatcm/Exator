@@ -59,7 +59,7 @@ def sendResetPasswordEmail(requestBody):
                     'Data': SUBJECT,
                 },
             },
-            Source="Exator@gmail.com", # replace with your "From" address
+            Source="phat.caominh.dev@gmail.com", # replace with your "From" address
         )
     # Display an error if something goes wrong. 
     except ClientError as e:
