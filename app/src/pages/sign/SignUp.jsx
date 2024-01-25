@@ -1,7 +1,8 @@
 import axios from "axios";
-import React, { useState } from "react";
-import { BsCheck } from "react-icons/bs";
+import React, { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaCheckCircle } from "react-icons/fa";
+import Loading from "../../component/loading/Loading";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -9,26 +10,48 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [name, setName] = useState("");
+  const [error, setError] = useState(null);
+  const [isSignUpSuccess, setIsSignUpSuccess] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const signUp = async () => {
-    const url = `${process.env.REACT_APP_URL_USER}/user/signup`;
+    if (!password || !email || !passwordConfirm || !name) {
+      setError("All attribute not be emty!");
+      return;
+    }
+    if (!validateEmail) {
+      setError("Email is invalid!");
+      return;
+    }
+
+    // const url = `${process.env.REACT_APP_URL_USER}/user/signup`;
+    const url = `https://sxn2p36rx3.execute-api.ap-northeast-1.amazonaws.com/prod/user/signup`;
+
     const body = {
       username: name,
       email,
       password,
       passwordConfirm,
     };
-    console.log(body);
     try {
+      setLoading(true);
       const response = await axios.post(url, body);
-      if (response.status === 200) {
-        navigate("/signin");
-      }
-    } catch (error) {}
+      if (response.status === 200) setIsSignUpSuccess(true);
+    } catch (error) {
+      setIsSignUpSuccess(false);
+      setError(error.response.data.body.message);
+    }
+    setLoading(false);
   };
+
+  const validateEmail = useMemo(() => {
+    return email.match(
+      /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+  }, [email]);
   return (
     <div className="">
-      <div className="mx-auto max-w-[380px] p-7 mt-[20px] shadow-xl rounded-xl">
+      <div className="mx-auto max-w-[380px] p-7 mt-[20px] shadow-xl rounded-xl relative">
         <h1 className="text-[32px] text-center py-7 leading-tight">
           BECOME A MEMBER
         </h1>
@@ -36,7 +59,11 @@ export default function SignUp() {
           Create your Exator Member profile and get first access to the very
           best of Nike products, inspiration and community.
         </div>
-        <div className="">
+        <div
+          className={`${
+            loading || isSignUpSuccess ? "invisible opacity-0" : ""
+          }`}
+        >
           <input
             type="email"
             placeholder="Email Address"
@@ -50,6 +77,8 @@ export default function SignUp() {
             type="password"
             placeholder="Password"
             name="password"
+            minLength={6}
+            maxLength={50}
             autoComplete="nope"
             onChange={(e) => setPassword(e.target.value)}
             className={"w-full border rounded-md px-4 py-2 outline-none mt-2"}
@@ -59,6 +88,8 @@ export default function SignUp() {
             type="password"
             placeholder="Confirm Password"
             name="confirmPassword"
+            minLength={6}
+            maxLength={50}
             autoComplete="nope"
             onChange={(e) => setPasswordConfirm(e.target.value)}
             className={"w-full border rounded-md px-4 py-2 outline-none mt-2"}
@@ -68,10 +99,13 @@ export default function SignUp() {
             type="text"
             placeholder="Name"
             name="name"
+            maxLength={30}
             autoComplete="nope"
             onChange={(e) => setName(e.target.value)}
             className={"w-full border rounded-md px-4 py-2 outline-none mt-2"}
           />
+
+          <div className="text-[14px] text-red-500 mt-1">{error}</div>
 
           {/* <input
               type="date"
@@ -144,13 +178,13 @@ export default function SignUp() {
           </p>
           <button
             type="submit"
-            className="w-full bg-black text-white p-2 mt-4 font-semibold rounded font-['League_Gothic'] text-[18px]"
+            className="w-full bg-black text-white p-2 mt-4 font-semibold rounded font-['League_Gothic'] text-[18px] hover:opacity-70"
             onClick={() => signUp()}
           >
             J O I N&nbsp;&nbsp;U S
           </button>
           <p className="text-center text-[#8d8d8d] text-[12px] mt-5 flex justify-center">
-            Already a member ?{" "}
+            Already a member ?
             <span
               className="underline hover:text-red-500 cursor-pointer ml-1 transition-all"
               onClick={() => navigate("/signin")}
@@ -159,6 +193,27 @@ export default function SignUp() {
             </span>
           </p>
         </div>
+        {loading ? (
+          <div className="absolute top-1/2 left-1/2 translate-x-[-50%]">
+            <Loading size="l"></Loading>
+          </div>
+        ) : (
+          isSignUpSuccess && (
+            <div className="absolute w-full top-1/2 left-0 translate-y-[-50%] flex flex-col items-center px-7">
+              <div className="">
+                <FaCheckCircle className="text-[38px] text-green-600"></FaCheckCircle>
+              </div>
+              <p className="text-green-600 text-[24px]">Sign up success!</p>
+              <button
+                type="submit"
+                className="w-full bg-black text-white p-2 mt-12 font-semibold rounded text-[18px] hover:opacity-70"
+                onClick={() => navigate("/signin")}
+              >
+                GO TO SIGN IN
+              </button>
+            </div>
+          )
+        )}
       </div>
     </div>
   );

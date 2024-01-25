@@ -1,5 +1,5 @@
 import * as bcrypt from "bcryptjs";
-// import crypto from "crypto";
+import * as crypto from "crypto";
 
 class User {
   username: string;
@@ -8,7 +8,8 @@ class User {
   password: string;
   role: "user" | "admin";
   isVerify: boolean;
-
+  passwordResetToken: string;
+  passwordResetExpires: string;
   constructor(data: Partial<User>) {
     if (!data.username || !data.email || !data.password) {
       throw new Error(
@@ -22,6 +23,8 @@ class User {
     this.password = data.password;
     this.role = data.role || "user";
     this.isVerify = data.isVerify || false;
+    this.passwordResetToken = data.passwordResetToken || "";
+    this.passwordResetExpires = data.passwordResetExpires || "";
   }
 
   async hashPassword(): Promise<void> {
@@ -32,15 +35,17 @@ class User {
     return await bcrypt.compare(candidatePassword, this.password);
   }
 
-  // createPasswordResetToken(): string {
-  //   const resetToken = crypto.randomBytes(32).toString("hex");
-  //   this.passwordResetToken = crypto
-  //     .createHash("sha256")
-  //     .update(resetToken)
-  //     .digest("hex");
-  //   this.passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000);
-  //   return resetToken;
-  // }
+  createPasswordResetToken(): string {
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    this.passwordResetToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+    this.passwordResetExpires = new Date(
+      Date.now() + 10 * 60 * 1000
+    ).toISOString();
+    return resetToken;
+  }
 }
 
 export default User;
