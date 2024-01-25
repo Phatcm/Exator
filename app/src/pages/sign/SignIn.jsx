@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "../../redux/userSlice";
 import GoogleSignIn from "../../component/google-signin/GoogleSignIn";
+import FaceBookBtn from "../../component/facebook-login/FaceBookBtn";
 
 export default function SignIn() {
   const dispatch = useDispatch();
@@ -23,9 +24,8 @@ export default function SignIn() {
       if (response.status === 200) {
         console.log(response);
         const userData = response.data.body.user;
-        // dispatch(setUser(userData));
-        // console.log(document.cookie);
-        // navigate("/dashboard");
+        dispatch(setUser(userData));
+        navigate("/dashboard");
       }
     } catch (error) {}
   };
@@ -84,6 +84,9 @@ export default function SignIn() {
 
           <div className="">
             <GoogleSignIn></GoogleSignIn>
+          </div>
+          <div className="">
+            <FaceBookBtn></FaceBookBtn>
           </div>
         </div>
       </div>

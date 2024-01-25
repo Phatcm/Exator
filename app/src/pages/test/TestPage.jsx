@@ -3,10 +3,12 @@ import React, { useEffect, useState } from "react";
 import { FaChevronRight } from "react-icons/fa6";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FaChevronDown } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setExam } from "../../redux/examSlice";
 
 export default function TestPage() {
+  const user = useSelector((state) => state.user);
+
   const dispatch = useDispatch();
   let [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -49,7 +51,7 @@ export default function TestPage() {
       const url = `${process.env.REACT_APP_URL}/exam`;
       const params = {
         owner: usernameValue,
-        username: "nice",
+        username: user.email,
         topic: topicValue,
         number: number,
       };
@@ -59,7 +61,7 @@ export default function TestPage() {
         const payload = {
           questions: data[Object.keys(data)[0]],
           time: time,
-          user: "nice",
+          user: user.email,
           director: usernameValue,
           topic: topicValue,
           id: Object.keys(data)[0],

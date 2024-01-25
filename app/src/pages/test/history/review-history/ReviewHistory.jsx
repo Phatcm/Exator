@@ -2,17 +2,20 @@ import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import QuestionHistory from "../../../../component/question-history/QuestionHistory";
+import { useSelector } from "react-redux";
 
 export default function ReviewHistory() {
+  const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const questionRefs = useRef([]);
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [question, setQuestion] = useState([]);
+
   useEffect(() => {
     const getThemes = async () => {
       setLoading(true);
-      const url = `${process.env.REACT_APP_URL}/history/questions?username=nice&attemptId=${id}`;
+      const url = `${process.env.REACT_APP_URL}/history/questions?username=${user.email}&attemptId=${id}`;
       const response = await axios.get(url);
 
       if (response.status === 200) {

@@ -4,7 +4,7 @@ import boto3
 
 def create_lambda_layer_and_add_to_function():
     # Install dependencies
-    subprocess.check_call("pip install --target ../lambda_layer/python/ -r requirements.tx", shell=True)
+    subprocess.check_call("pip install --target ../lambda_layer/python/ -r requirements.txt", shell=True)
 
     # Zip the dependencies
     subprocess.check_call("zip -r lambda_layer_payload.zip ../lambda_layer", shell=True)
