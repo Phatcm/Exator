@@ -23,6 +23,13 @@ jobs:
       with:
         python-version: 3.11
 
+    - name: Create layers
+      run: |
+        pip install --upgrade pip
+        ls # Checking the files in current dir
+        mkdir -p lambda_layer/python/ # Creating new directory for layer.
+        pip install --target ./lambda_layer/python/ -r requirements.txt # Installing dependencies in the new directory.
+
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
       with:
@@ -51,18 +58,3 @@ jobs:
     - name: Terraform Apply
       id: apply
       run: cd terraform && terraform apply -auto-approve -input=false
-    
-    - name: Create lambda layer and add to lambda function
-      id: lambda
-      run: |
-        pip install --upgrade pip
-        ls # Checking the files in current dir
-        mkdir -p lambda_layer/python/ # Creating new directory for layer.
-        pip install boto3
-        python lambda_layer.py
-      env:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
-
-
