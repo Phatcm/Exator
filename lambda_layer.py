@@ -19,10 +19,7 @@ def create_lambda_layer_and_add_to_function():
         },
         CompatibleRuntimes=['python3.11']
     )
-
-    # Print the ARN of the new layer version
-    print(response['LayerVersionArn'])
-
+    
     # Add the layer to the Lambda function
     client.update_function_configuration(
         #Change the function name
