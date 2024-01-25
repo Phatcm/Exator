@@ -8,6 +8,10 @@ logger.setLevel(logging.INFO)
 
 def sendResetPasswordEmail(requestBody):
     email = requestBody["email"]
+    response = is_email_verified(email)
+    if response == False:
+        return buildResponse(400, {"Message": "Email is not verified"})
+        
     token = requestBody["token"]
     
     # Create a new SES resource and specify a region.
@@ -66,3 +70,21 @@ def sendResetPasswordEmail(requestBody):
         return buildResponse(500, {"Message": "Internal server error: " + str(e)})
     else:
         return buildResponse(200, {"Message": "Email sent! Message ID:" + response['MessageId']})
+    
+def verify_email_address(email):
+    client = boto3.client('ses', region_name='ap-northeast-1')
+    response = client.verify_email_identity(
+        EmailAddress=email
+    )
+    return response
+
+def is_email_verified(email):
+    client = boto3.client('ses', region_name='ap-northeast-1')
+    response = client.list_identities(
+        IdentityType='EmailAddress',  # to list only email addresses
+    )
+
+    if email in response['Identities']:
+        return True
+    else:
+        return False
