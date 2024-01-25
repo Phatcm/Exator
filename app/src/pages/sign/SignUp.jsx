@@ -25,7 +25,7 @@ export default function SignUp() {
     }
 
     // const url = `${process.env.REACT_APP_URL_USER}/user/signup`;
-    const url = `https://sxn2p36rx3.execute-api.ap-northeast-1.amazonaws.com/prod/user/signup`;
+    const url = `${process.env.REACT_APP_URL_USER}/user/signup`;
 
     const body = {
       username: name,
