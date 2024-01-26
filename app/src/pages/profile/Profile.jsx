@@ -15,12 +15,15 @@ export default function Profile() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loadingSettings, setLoadingSetting] = useState(false);
+  const [loadingUpdatePassword, setLoadingUpdatePassword] = useState(false);
 
   useEffect(() => {
     setEmail(user.email);
     setName(user.username);
   }, [user]);
   const saveSettings = async () => {
+    setLoadingSetting(true);
     try {
       if (!name) {
         return;
@@ -66,8 +69,10 @@ export default function Profile() {
         transition: Bounce,
       });
     }
+    setLoadingSetting(false);
   };
   const savePassword = async () => {
+    setLoadingUpdatePassword(true);
     try {
       if (!currentPassword || !newPassword || !confirmPassword) {
         return;
@@ -115,6 +120,7 @@ export default function Profile() {
         transition: Bounce,
       });
     }
+    setLoadingUpdatePassword(false);
   };
 
   return (
@@ -212,12 +218,18 @@ export default function Profile() {
                 </div>
               </div>
               <div className="flex justify-end mt-auto">
-                <p
-                  className="pb-1 text-black text-[18px] bg-white hover:text-[#7697a0] hover:border-b-4 border-[#7697a0] cursor-pointer transition-all"
-                  onClick={savePassword}
-                >
-                  Save Password
-                </p>
+                {!loadingUpdatePassword ? (
+                  <p
+                    className="pb-1 text-black text-[18px] bg-white hover:text-[#7697a0] hover:border-b-4 border-[#7697a0] cursor-pointer transition-all"
+                    onClick={savePassword}
+                  >
+                    Save Password
+                  </p>
+                ) : (
+                  <div className="w-[100px]">
+                    <Loading size={"m"}></Loading>
+                  </div>
+                )}
               </div>
             </div>
           </div>
