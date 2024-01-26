@@ -4,7 +4,6 @@ import Pagination from "../../component/pagination/Pagination";
 import MyThemeItem from "../../component/my-theme-item/MyThemeItem";
 import axios from "axios";
 import CreateTopic from "../../component/create-topic/CreateTopic";
-import Notification from "../../component/notification-popup/Notification";
 import LinkNav from "../../component/link-nav/LinkNav";
 import Loading from "../../component/loading/Loading";
 import { useSelector } from "react-redux";
@@ -14,26 +13,13 @@ export default function MyLibrary() {
 
   const [themes, setThemes] = useState([]);
   const [isCreateTopic, setIsCreateTopic] = useState(false);
-  const [showSuccesed, setShowSuccessed] = useState(false);
-  const [showFailed, setShowFailed] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getThemes();
     return () => {};
-  }, []);
-  useEffect(() => {
-    if (showSuccesed) {
-      setTimeout(() => {
-        setShowSuccessed(false);
-      }, 3000);
-    }
-    if (showFailed) {
-      setTimeout(() => {
-        setShowFailed(false);
-      }, 3000);
-    }
-  }, [showSuccesed, showFailed]);
+  }, [user]);
+
   const getThemes = async () => {
     setLoading(true);
     const url = `${process.env.REACT_APP_URL}/topics?username=${user.email}`;
@@ -87,27 +73,15 @@ export default function MyLibrary() {
         {isCreateTopic && (
           <div
             className={`
-            absolute w-full h-full rounded-xl bg-black bg-opacity-50 transition-all duration-1000 top-0 left-0 z-50 p-20`}
+            absolute w-full h-full rounded-xl bg-black bg-opacity-50 transition-all duration-1000 top-0 left-0 z-20 p-20`}
           >
             <CreateTopic
               setIsCreateTopic={setIsCreateTopic}
-              setShowSuccessed={setShowSuccessed}
-              setShowFailed={setShowFailed}
               getThemes={getThemes}
             ></CreateTopic>
           </div>
         )}
       </div>
-      <Notification
-        type="success"
-        name={"Add successed"}
-        isShow={showSuccesed}
-      ></Notification>
-      <Notification
-        type="fail"
-        name={"Add failed"}
-        isShow={showFailed}
-      ></Notification>
     </Fragment>
   );
 }

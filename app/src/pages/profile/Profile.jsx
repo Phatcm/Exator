@@ -5,6 +5,7 @@ import { PiFinnTheHumanDuotone } from "react-icons/pi";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { Bounce, toast } from "react-toastify";
 
 export default function Profile() {
   const [loading, setLoading] = useState(false);
@@ -40,8 +41,24 @@ export default function Profile() {
           "Content-Type": "application/json", // Adjust the content type as needed
         },
       });
+      toast.promise(response, {
+        pending: "Promise is pending",
+        success: "Promise resolved 👌",
+        error: "Promise rejected 🤯",
+      });
     } catch (error) {
       console.log(error);
+      toast.error("Update failed", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
     }
   };
   const savePassword = async () => {
@@ -67,8 +84,30 @@ export default function Profile() {
         },
       });
       console.log(response);
+      toast.success("Update successfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
     } catch (error) {
       console.log(error);
+      toast.error("Update failed", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
     }
   };
 
