@@ -25,7 +25,7 @@ export default function ResetPassword() {
     }
 
     // const url = `${process.env.REACT_APP_URL_USER}/user/signup`;
-    const url = `https://sxn2p36rx3.execute-api.ap-northeast-1.amazonaws.com/prod/user/resetPassword`;
+    const url = `${process.env.REACT_APP_URL_USER}/user/resetPassword`;
 
     const body = {
       email,
