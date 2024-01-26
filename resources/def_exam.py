@@ -21,6 +21,7 @@ def getExam(parameter):
         return buildResponse(400, {"Message": "Missing required parameters"})
 
     try:
+        
         username = parameter["username"]
         owner = parameter["owner"]
         topic = parameter["topic"]
@@ -28,7 +29,8 @@ def getExam(parameter):
         number = int(parameter["number"])
         
         #Call get questions function
-        response = getQuestions(parameter)
+        input = {'username': owner, 'topic': topic}
+        response = getQuestions(input)
         body = json.loads(response["body"])
         
         #Extract the questions from the body response

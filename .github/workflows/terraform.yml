@@ -3,6 +3,11 @@ on:
     branches:
       - master
       - phat
+    paths:
+      - "resources/**"
+      - "terraform/**"
+      - ".github/workflows/**"
+      - "requirements.txt"
 jobs:
   deploy:
     name: dev-deploy
