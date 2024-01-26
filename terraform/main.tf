@@ -21,7 +21,8 @@ module "lambda-role" {
     "arn:aws:iam::aws:policy/AmazonAPIGatewayInvokeFullAccess",
     "arn:aws:iam::aws:policy/AmazonS3FullAccess",
     "arn:aws:iam::aws:policy/CloudWatchFullAccess",
-    "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
+    "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess",
+    "arn:aws:iam::aws:policy/AmazonSESFullAccess"
   ]
 }
 
@@ -59,9 +60,9 @@ module "favorite-db" {
 module "lambda-handler" {
     source = "./modules/lambda"
     #Layer
-    # layer_name = "Exator-lambda-layer"
-    # layer_source_dir = "../lambda_layer"
-    # layer_output_path = "../lambda_layer_payload.zip"
+    layer_name = "Exator-lambda-layer"
+    layer_source_dir = "../lambda_layer"
+    layer_output_path = "../lambda_layer_payload.zip"
 
     #Function
     lambda_function_name = "Exator-lambda-function"

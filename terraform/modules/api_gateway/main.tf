@@ -24,7 +24,9 @@ resource "aws_api_gateway_deployment" "prod" {
                 module.resource_question.etag,
                 module.resource_questions.etag,
                 module.resource_google_api.etag,
-                module.resource_facebook_api.etag
+                module.resource_facebook_api.etag,
+                module.resource_send_email.etag,
+                module.resource_verify_email.etag
             ])
         )
     }
@@ -85,7 +87,15 @@ resource "aws_api_gateway_deployment" "prod" {
 
         #facebook api
         module.resource_facebook_api.post_method_integration,
-        module.resource_facebook_api.options_method_integration
+        module.resource_facebook_api.options_method_integration,
+
+        #send email
+        module.resource_send_email.post_method_integration,
+        module.resource_send_email.options_method_integration,
+
+        #verify email
+        module.resource_verify_email.post_method_integration,
+        module.resource_verify_email.options_method_integration
     ]
 }
 
