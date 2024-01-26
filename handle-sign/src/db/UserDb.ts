@@ -52,6 +52,7 @@ export const updateUser = async (
 ) => {
   const client = new DynamoDBClient({});
   const docClient = DynamoDBDocumentClient.from(client);
+  console.log(key, photo, username);
 
   const command = new UpdateCommand({
     TableName: process.env.DYNAMODB_TABLE_NAME,

@@ -29,7 +29,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     const checkLoggedIn = async () => {
-      const url = `${process.env.REACT_APP_URL_USER}}/user/isLoggedIn`;
+      const url = `${process.env.REACT_APP_URL_USER}/user/isLoggedIn`;
       const jwt = Cookies.get("jwt");
       if (!jwt) {
         setLoading(false);
@@ -102,6 +102,7 @@ function App() {
           </div>
         </div>
       )}
+      {/* <Notification ></Notification> */}
     </Fragment>
   );
 }

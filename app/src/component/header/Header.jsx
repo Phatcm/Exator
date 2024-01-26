@@ -75,13 +75,16 @@ export default function Header() {
         </div>
         {showAccount && (
           <div ref={ref} className="absolute top-full right-0 z-50">
-            <div className="px-4 py-2 bg-white rounded-xl border flex flex-col items-start">
+            <div className="px-4 py-2 bg-white rounded-xl border flex flex-col items-start min-w-[200px]">
               <div className="p-2 text-[18px]">
-                <p className="">{user.name}</p>
+                <p className="whitespace-nowrap">{user.username}</p>
               </div>
               <div className="w-full h-[2px] bg-gray-300"></div>
-              <div className="pt-4 flex flex-col gap-2 w-full">
-                <div className="flex gap-4 px-1 py-2 cursor-pointer hover:bg-gray-100 rounded-xl">
+              <div className="pt-4 flex flex-col gap-2 w-full ">
+                <div
+                  className="flex gap-4 px-1 py-2 cursor-pointer hover:bg-gray-100 rounded-xl"
+                  onClick={() => navigate("/profile")}
+                >
                   <div className="w-[28px] h-[28px] flex items-center justify-center rounded-full bg-gray-100 p-1 ">
                     <FiUser className="text-[24px]"></FiUser>
                   </div>

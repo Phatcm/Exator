@@ -168,6 +168,8 @@ export const updatePassword = catchAsync(async (req, res) => {
     });
     return;
   }
+  console.log(password, passwordConfirm);
+
   //check match
   if (password !== passwordConfirm) {
     buildResponse(res, 400, "error", {
@@ -356,6 +358,8 @@ export const signInWithGoogle = catchAsync(async (req, res, next) => {
     });
 
     if (response.status === 200) {
+      console.log("name: ", response);
+
       const { email, name, is_new } = response.data.body;
 
       const token = generateToken(email);

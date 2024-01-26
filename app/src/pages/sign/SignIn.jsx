@@ -127,7 +127,10 @@ export default function SignIn() {
             </span>
           </p>
           <div className="">
-            <GoogleSignIn></GoogleSignIn>
+            <GoogleSignIn
+              setLoading={setLoading}
+              keepSignedIn={keepSignedIn}
+            ></GoogleSignIn>
           </div>
         </div>
         {loading && (
