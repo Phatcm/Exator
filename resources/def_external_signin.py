@@ -29,9 +29,7 @@ def verifyTokenGG(requestBody):
         # ID token is valid. Get the user's Google Account ID from the decoded token.
         userid = idinfo['sub']
         email = idinfo['email']
-        name = idinfo['name']
-        print(email)
-        print(name)
+        
         # password = str(uuid.uuid4()).replace('-', '')[:8] # Random password
         
          # Check if userid already exist in user_table
@@ -40,8 +38,12 @@ def verifyTokenGG(requestBody):
         if "Item" in response:
             logger.info("User already exist")
             is_new = False
+            #Set name from db
+            name = response["Item"]["username"]
         else:
             logger.info("User does not exist")
+            #Set name from google to db
+            name = idinfo['name']
             # Add user to user_table
             response = user_table.put_item(
                 Item={
