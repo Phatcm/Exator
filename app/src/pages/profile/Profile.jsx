@@ -41,10 +41,16 @@ export default function Profile() {
           "Content-Type": "application/json", // Adjust the content type as needed
         },
       });
-      toast.promise(response, {
-        pending: "Promise is pending",
-        success: "Promise resolved 👌",
-        error: "Promise rejected 🤯",
+      toast.success("Update successfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
       });
     } catch (error) {
       console.log(error);
