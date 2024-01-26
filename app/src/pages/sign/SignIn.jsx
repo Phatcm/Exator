@@ -6,6 +6,7 @@ import { setUser } from "../../redux/userSlice";
 import GoogleSignIn from "../../component/google-signin/GoogleSignIn";
 import Loading from "../../component/loading/Loading";
 import Cookies from "js-cookie";
+import { Bounce, toast } from "react-toastify";
 
 export default function SignIn() {
   const dispatch = useDispatch();
@@ -67,8 +68,36 @@ export default function SignIn() {
       setError("That is not email!");
       return;
     }
-    const response = await axios.post(url, { email });
-    console.log(response);
+    try {
+      setLoading(true);
+      const response = await axios.post(url, { email });
+      toast.success("Have sent to your email to reset your password!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
+      setLoading(false);
+    } catch (error) {
+      toast.error("Error to send reset password your email", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
+      console.log(error);
+      setLoading(false);
+    }
   };
   return (
     <div className="">

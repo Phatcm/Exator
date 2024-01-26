@@ -15,7 +15,7 @@ import NotFound from "../../notfound/NotFound";
 import { v4 as uuidv4 } from "uuid";
 import Loading from "../../../component/loading/Loading";
 import { useSelector } from "react-redux";
-import Notification from "../../../component/notification-popup/Notification";
+import { Bounce, toast } from "react-toastify";
 
 export default function MyTheme() {
   const user = useSelector((state) => state.user);
@@ -120,16 +120,28 @@ export default function MyTheme() {
       if (response.status === 200) {
         getQuestions();
         setIsSetting(false);
-        setNotification({
-          type: "success",
-          show: true,
-          message: "update success!",
+        toast.success("Update topic successfully", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
         });
       } else {
-        setNotification({
-          type: "fail",
-          show: true,
-          message: "update fail!",
+        toast.error("Update topic failed", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Bounce,
         });
       }
       setNewCards([]);
@@ -156,8 +168,30 @@ export default function MyTheme() {
     const url = `${process.env.REACT_APP_URL}/topic?username=${user.email}&topic=${theme}`;
     const response = await axios.delete(url);
     if (response.status === 200) {
-      console.log("Delete success");
+      toast.success("Delete topic successfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
       navigate("/mylibrary");
+    } else {
+      toast.error("Create topic failed", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
     }
   };
   const deleteNewCard = (index) => {
@@ -336,11 +370,6 @@ export default function MyTheme() {
           )}
         </div>
       </div>
-      <Notification
-        type={notification.type}
-        name={notification.message}
-        isShow={notification.show}
-      ></Notification>
     </Fragment>
   ) : (
     <NotFound></NotFound>

@@ -22,6 +22,8 @@ import Cookies from "js-cookie";
 import { setUser } from "./redux/userSlice";
 import Profile from "./pages/profile/Profile";
 import ResetPassword from "./pages/resetPassword/ResetPassword";
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const user = useSelector((state) => state.user);
@@ -96,13 +98,14 @@ function App() {
                 <Route path="/mylibrary/:theme" element={<MyTheme />} />
                 <Route path="/favorite" element={<Favorite />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/*" element={<DashBoardPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </div>
           </div>
         </div>
       )}
-      {/* <Notification ></Notification> */}
+      <ToastContainer />
     </Fragment>
   );
 }

@@ -3,16 +3,11 @@ import React, { Fragment, useState } from "react";
 import { IoExitOutline } from "react-icons/io5";
 import { IoCreateOutline } from "react-icons/io5";
 import { PiUploadSimple } from "react-icons/pi";
-import Notification from "../notification-popup/Notification";
 import Loading from "../loading/Loading";
 import { useSelector } from "react-redux";
+import { Bounce, toast } from "react-toastify";
 
-export default function CreateTopic({
-  setIsCreateTopic,
-  setShowSuccessed,
-  setShowFailed,
-  getThemes,
-}) {
+export default function CreateTopic({ setIsCreateTopic, getThemes }) {
   const user = useSelector((state) => state.user);
   const [titleFocus, setTitleFocus] = useState(false);
   const [decFocus, setDecFocus] = useState(false);
@@ -37,12 +32,31 @@ export default function CreateTopic({
     };
     const response = await axios.post(url, body);
     if (response.status === 200) {
-      setShowSuccessed(true);
       getThemes();
+      toast.success("Create topic successfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
     } else {
-      setShowFailed(true);
+      toast.error("Create topic failed", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Bounce,
+      });
     }
-    if (response) console.log(response);
     setLoading(false);
     setIsCreateTopic(false);
   };

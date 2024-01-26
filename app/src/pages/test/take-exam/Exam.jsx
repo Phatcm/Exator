@@ -96,7 +96,7 @@ export default function Exam() {
               } relative p-2 px-4 font-semibold rounded-xl border border-gray-500 cursor-pointer  transition-all`}
               onClick={() => {
                 if (isReviewMode) {
-                  navigate(`/Dashboard/${exam.user}/${exam.topic}`);
+                  navigate(`/Dashboard/${exam.owner}/${exam.topic}`);
                 } else {
                   submitExam();
                 }
@@ -161,7 +161,7 @@ export default function Exam() {
             <ResultExam
               yourTime={getTimeFromSecond(time)}
               score={score}
-              linkTopic={`/Dashboard/${exam.user}/${exam.topic}`}
+              linkTopic={`/Dashboard/${exam.owner}/${exam.topic}`}
               setShowResult={setShowResult}
             ></ResultExam>
           </div>

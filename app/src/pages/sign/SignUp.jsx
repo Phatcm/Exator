@@ -205,7 +205,7 @@ export default function SignUp() {
           </div>
         ) : (
           isSignUpSuccess && (
-            <div className="absolute w-full top-1/2 left-0 translate-y-[-50%] flex flex-col items-center px-7">
+            <div className="absolute w-full top-1/2 translate-x-[40px] left-0 translate-y-[-50%] flex flex-col items-center px-7">
               <div className="">
                 <FaCheckCircle className="text-[38px] text-green-600"></FaCheckCircle>
               </div>

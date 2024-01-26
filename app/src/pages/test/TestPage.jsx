@@ -60,6 +60,7 @@ export default function TestPage() {
       };
       const response = await axios.get(url, { params: params });
       if (response.status === 200) {
+        console.log(response);
         const data = response.data;
         const payload = {
           questions: data[Object.keys(data)[0]],
