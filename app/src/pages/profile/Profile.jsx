@@ -170,12 +170,18 @@ export default function Profile() {
               </div>
 
               <div className="flex justify-end mt-auto">
-                <p
-                  className="pb-1 text-black text-[18px] bg-white hover:text-[#7697a0] hover:border-b-4 border-[#7697a0] cursor-pointer transition-all"
-                  onClick={saveSettings}
-                >
-                  Save Settings
-                </p>
+                {!loadingSettings ? (
+                  <p
+                    className="pb-1 text-black text-[18px] bg-white hover:text-[#7697a0] hover:border-b-4 border-[#7697a0] cursor-pointer transition-all"
+                    onClick={saveSettings}
+                  >
+                    Save Settings
+                  </p>
+                ) : (
+                  <div className="w-[100px]">
+                    <Loading size={"m"}></Loading>
+                  </div>
+                )}
               </div>
             </div>
             <div className="h-full w-[2px] bg-gray-300"></div>
