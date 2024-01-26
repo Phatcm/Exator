@@ -49,7 +49,7 @@ export default function Favorite() {
             </div>
           </div>
         ) : (
-          <Loading></Loading>
+          <Loading size={"xl"}></Loading>
         )}
       </div>
     </div>

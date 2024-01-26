@@ -19,11 +19,21 @@ export class MainStack extends Stack {
         resource: ["arn:aws:logs:*:*:*"],
       },
     ];
-    console.log(1);
 
     const iam = createIamRole(this, "AxetorAppIamRole", policies);
     const lambda = createLambda(this, "AxetorAppLambda", iam);
-    const api = createApi(this, "AxetorAppApi", lambda);
+    const apiprod = createApi(
+      this,
+      "AxetorAppApi-prod",
+      lambda,
+      "https://exator.vercel.app"
+    );
+    const apidev = createApi(
+      this,
+      "AxetorAppApi-dev",
+      lambda,
+      "https://kind-flowers-tease.loca.lt"
+    );
     const database = CreateUser(this, "AxetorAppDMetadata", lambda);
   }
 }

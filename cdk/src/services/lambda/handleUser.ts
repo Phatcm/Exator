@@ -18,6 +18,7 @@ export const createLambda = (construct: Construct, id: string, role: any) => {
       DYNAMODB_TABLE_NAME: process.env.DYNAMODB_TABLE_NAME || "avc",
       REGION: "ap-northeast-1",
       JWT_SECRET: "KHAMMA_SECRET_KEY",
+      URL: "https://04jicbyks4.execute-api.ap-northeast-1.amazonaws.com/prod",
     },
   });
 

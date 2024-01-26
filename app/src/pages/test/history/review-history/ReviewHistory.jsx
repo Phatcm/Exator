@@ -20,7 +20,6 @@ export default function ReviewHistory() {
 
       if (response.status === 200) {
         const data = response.data;
-        console.log(data);
         setQuestion(data[0]);
       }
     };

@@ -5,6 +5,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { FaChevronDown } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { setExam } from "../../redux/examSlice";
+import Loading from "../../component/loading/Loading";
 
 export default function TestPage() {
   const user = useSelector((state) => state.user);
@@ -20,12 +21,14 @@ export default function TestPage() {
   const [invalidUser, setInvalidUser] = useState(false);
   const [invalidNumber, setInvalidNumber] = useState(false);
   const [invalidTime, setInvalidTime] = useState(false);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     setUsernameValue(searchParams.get("username"));
     setTopicValue(searchParams.get("topic"));
   }, []);
 
   const createTest = async () => {
+    setLoading(true);
     let active = true;
 
     if (usernameValue === null || usernameValue === "") {
@@ -71,6 +74,9 @@ export default function TestPage() {
         navigate("/test/exam");
       }
     }
+    setTimeout(() => {
+      setLoading(false);
+    }, 5000);
   };
 
   return (
@@ -191,14 +197,25 @@ export default function TestPage() {
           <div
             className={` group
               cursor-pointer flex justify-start items-center bg-[#eff7f9] rounded-xl border border-[#939393] py-3 px-4 pr-8 transition-all duration-500 
-              hover:bg-black hover:text-white hover:border-white
+               hover:border-white
+              ${
+                !loading
+                  ? "hover:bg-black hover:text-white hover:border-white"
+                  : "opacity-70"
+              }
               `}
             onClick={() => {
-              createTest();
+              if (!loading) createTest();
             }}
           >
             <p className="text-[16px] font-medium">Take an exam</p>
-            <FaChevronRight className="text-[22px] ml-2 group-hover:translate-x-4 transition-all duration-500 "></FaChevronRight>
+            {loading ? (
+              <div>
+                <Loading size={"s"}></Loading>
+              </div>
+            ) : (
+              <FaChevronRight className="text-[22px] ml-2 group-hover:translate-x-4 transition-all duration-500 "></FaChevronRight>
+            )}
           </div>
         </div>
       </div>

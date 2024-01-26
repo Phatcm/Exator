@@ -22,7 +22,18 @@ export default function MyLibrary() {
     getThemes();
     return () => {};
   }, []);
-
+  useEffect(() => {
+    if (showSuccesed) {
+      setTimeout(() => {
+        setShowSuccessed(false);
+      }, 3000);
+    }
+    if (showFailed) {
+      setTimeout(() => {
+        setShowFailed(false);
+      }, 3000);
+    }
+  }, [showSuccesed, showFailed]);
   const getThemes = async () => {
     setLoading(true);
     const url = `${process.env.REACT_APP_URL}/topics?username=${user.email}`;

@@ -68,7 +68,5 @@ export const updateUser = async (
 
   const response = await docClient.send(command);
 
-  console.log(response);
-
   return response;
 };
