@@ -36,7 +36,13 @@ export default function SignUp() {
     try {
       setLoading(true);
       const response = await axios.post(url, body);
-      if (response.status === 200) setIsSignUpSuccess(true);
+      if (response.status === 200) {
+        const sendEmailVerify = axios.post(
+          `${process.env.REACT_APP_URL}/email/verify`,
+          { email: email }
+        );
+        setIsSignUpSuccess(true);
+      }
     } catch (error) {
       setIsSignUpSuccess(false);
       setError(error.response.data.body.message);
@@ -204,6 +210,9 @@ export default function SignUp() {
                 <FaCheckCircle className="text-[38px] text-green-600"></FaCheckCircle>
               </div>
               <p className="text-green-600 text-[24px]">Sign up success!</p>
+              <p className="text-green-600 text-[24px]">
+                You should verify the email!
+              </p>
               <button
                 type="submit"
                 className="w-full bg-black text-white p-2 mt-12 font-semibold rounded text-[18px] hover:opacity-70"

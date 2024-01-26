@@ -5,27 +5,28 @@ import axios from "axios";
 import Loading from "../../component/loading/Loading";
 import LinkNav from "../../component/link-nav/LinkNav";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 
 export default function DashBoardPage() {
   const [themes, setThemes] = useState([]);
   const [loading, setLoading] = useState(false);
-  let { search } = useParams();
+  let [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     const getThemes = async () => {
       setLoading(true);
       const url = `${process.env.REACT_APP_URL}/topics`;
       const response = await axios.get(url);
-
+      const search = searchParams.get("search");
       let data = response.data;
       if (search) data = data.filter((theme) => theme.topic.includes(search));
+      console.log(data);
       setThemes(data);
       setLoading(false);
     };
     getThemes();
     return () => {};
-  }, [search]);
+  }, [searchParams]);
   return (
     <div className="h-full flex flex-col">
       {/* <h1 className="mt-2 text-[20px] font-semibold">Dashboard</h1> */}

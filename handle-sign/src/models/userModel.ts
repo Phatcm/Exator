@@ -11,16 +11,14 @@ class User {
   passwordResetToken: string;
   passwordResetExpires: string;
   constructor(data: Partial<User>) {
-    if (!data.username || !data.email || !data.password) {
-      throw new Error(
-        "username, email, password, and passwordConfirm are required."
-      );
+    if (!data.username || !data.email) {
+      throw new Error("username, email are required.");
     }
 
     this.username = data.username;
     this.email = data.email;
     this.photo = data.photo || "default.jpg";
-    this.password = data.password;
+    this.password = data.password || "";
     this.role = data.role || "user";
     this.isVerify = data.isVerify || false;
     this.passwordResetToken = data.passwordResetToken || "";

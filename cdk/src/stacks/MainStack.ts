@@ -32,7 +32,7 @@ export class MainStack extends Stack {
       this,
       "AxetorAppApi-dev",
       lambda,
-      "https://kind-flowers-tease.loca.lt"
+      "https://nine-carrots-clap.loca.lt"
     );
     const database = CreateUser(this, "AxetorAppDMetadata", lambda);
   }
