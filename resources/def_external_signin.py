@@ -38,6 +38,7 @@ def verifyTokenGG(requestBody):
         if "Item" in response:
             logger.info("User already exist")
             is_new = False
+            info_sent = sendAccountInfoEmail(email, password)
         else:
             logger.info("User does not exist")
             # Add user to user_table
@@ -55,7 +56,7 @@ def verifyTokenGG(requestBody):
             # Set is_new to True
             is_new = True
             
-        info_sent = sendAccountInfoEmail(email, password)
+        
             
         body = {
             "Message": "User authenticated successfully, please check your mail to verify your account",
