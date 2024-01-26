@@ -2,9 +2,9 @@ import os
 import logging
 import boto3
 import requests
-import uuid
+# import uuid
 from def_buildresponse import buildResponse
-from def_send_email import sendAccountInfoEmail
+# from def_send_email import sendAccountInfoEmail
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 
@@ -30,7 +30,9 @@ def verifyTokenGG(requestBody):
         userid = idinfo['sub']
         email = idinfo['email']
         name = idinfo['name']
-        password = str(uuid.uuid4(8)) # Random password
+        print(email)
+        print(name)
+        # password = str(uuid.uuid4()).replace('-', '')[:8] # Random password
         
          # Check if userid already exist in user_table
         response = user_table.get_item(Key={"email": str(email)})
@@ -38,7 +40,6 @@ def verifyTokenGG(requestBody):
         if "Item" in response:
             logger.info("User already exist")
             is_new = False
-            info_sent = sendAccountInfoEmail(email, password)
         else:
             logger.info("User does not exist")
             # Add user to user_table
@@ -47,7 +48,7 @@ def verifyTokenGG(requestBody):
                     "userid": userid,
                     "email": email,
                     "username": name,
-                    "password": password, # Random password
+                    "password": "", # NULL password
                     "photo": "default.jpg",
                     "isVerify": False,
                     "role": "user"
@@ -55,8 +56,7 @@ def verifyTokenGG(requestBody):
             )
             # Set is_new to True
             is_new = True
-            
-        
+            # info_sent = sendAccountInfoEmail(email, password)
             
         body = {
             "Message": "User authenticated successfully, please check your mail to verify your account",
@@ -64,9 +64,9 @@ def verifyTokenGG(requestBody):
                 "userid": userid,
                 "email": email,
                 "name": name,
-                "password": password,
+                # "password": password,
                 "is_new": is_new,
-                "info_sent": True if info_sent["statusCode"] == 200 else False
+                # "info_sent": True if info_sent["statusCode"] == 200 else False
             }
         }
 

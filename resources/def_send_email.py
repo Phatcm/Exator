@@ -30,7 +30,7 @@ def sendResetPasswordEmail(requestBody):
 
     # The email body for recipients with non-HTML email clients.
     BODY_TEXT = ("Please click on the following link to reset your password:\n"
-                 "https://kind-flowers-tease.loca.lt/resetPassword?token={}&email={}".format(token, email))
+                 "https://exator.vercel.app/resetPassword?token={}&email={}".format(token, email))
 
     # The HTML body of the email.
     BODY_HTML = """<html>
@@ -38,7 +38,7 @@ def sendResetPasswordEmail(requestBody):
     <body>
       <h1>Password Reset Requested</h1>
       <p>Please click on the following link to reset your password:</p>
-      <a href='https://kind-flowers-tease.loca.lt/resetPassword?token={}&email={}'>Reset Password</a>
+      <a href='https://exator.vercel.app/resetPassword?token={}&email={}'>Reset Password</a>
     </body>
     </html>
                 """.format(token,email)
